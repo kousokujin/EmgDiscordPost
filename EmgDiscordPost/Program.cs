@@ -40,16 +40,24 @@ namespace EmgDiscordPost
             Console.ReadLine();
             */
 
+            Console.Write("Token:");
             string token = Console.ReadLine();
             ulong channelID = 348314939934375938;
             string BOT_NAME = "testApplication";
 
+            /*
             DiscordService discord = new DiscordService(token, channelID, BOT_NAME);
 
             discord.ReceiveEvent += Recive;
             discord.ReceiveReplay += Replay;
             string content = Console.ReadLine();
             discord.postStr(content);
+            */
+
+            IemgPost postSrv = new emgPostToDiscord(token, channelID, BOT_NAME);
+            EmgPostController con = new EmgPostController(postSrv);
+
+            con.todayEmgOrder += Recive;
 
             Console.ReadLine();
         }

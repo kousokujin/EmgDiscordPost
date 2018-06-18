@@ -4,7 +4,7 @@ using System.Text;
 using Discord.WebSocket;
 using Discord;
 using System.Threading.Tasks;
-using System.Text.RegularExpressions;
+//using System.Text.RegularExpressions;
 
 namespace EmgDiscordPost
 {
@@ -65,11 +65,11 @@ namespace EmgDiscordPost
 
                     if (isRep == true)
                     {
-                        RunReceiveEvent(this, new ReceiveData(arg.Author.Username, mes));
+                        RunReplayEvent(this, new ReceiveData(arg.Author.ToString(), mes));
                     }
                     else
                     {
-                        RunReplayEvent(this, new ReceiveData(arg.Author.Username, arg.Content));
+                        RunReceiveEvent(this, new ReceiveData(arg.Author.ToString(), arg.Content));
                     }
                 }
             });
@@ -105,8 +105,6 @@ namespace EmgDiscordPost
             string replace = mes.Replace(myIDstr,"");
 
             return (isRep, replace);
-
-
         }
     }
 

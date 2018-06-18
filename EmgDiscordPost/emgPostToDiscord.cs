@@ -32,7 +32,10 @@ namespace EmgDiscordPost
 
                 foreach (string s in orderwords)
                 {
-                    isOrder = (data.content.Contains(s));
+                    if (data.content.Contains(s))
+                    {
+                        isOrder = true;
+                    }
                 }
                 if (isOrder)    //問い合わせワードが含まれていたら
                 {
@@ -42,9 +45,10 @@ namespace EmgDiscordPost
         }
 
         //緊急クエストが始まる前・始まった時に使う
+        /*
         public async Task postEmgTime(emgQuest emg,int interval)
         {
-            /*
+            
             TimeSpan ts30 = new TimeSpan(0, 30, 0);
             TimeSpan ts60 = new TimeSpan(1, 0, 0);
             string eventname = emg.eventName;
@@ -68,7 +72,7 @@ namespace EmgDiscordPost
             {
                 await PostAsync(string.Format("【30分前】{0} {1}", emg.eventTime.ToString("HH:mm"), emg.eventName));
             }
-            */
+            
 
             if(interval == 0)
             {
@@ -80,8 +84,10 @@ namespace EmgDiscordPost
             }
 
         }
+        */
 
         //緊急クエストの一覧
+        /*
         public async Task postListEmg(List<EventData> data, DateTime time,bool Lodos = false)
         {
             if(data.Count == 0)
@@ -114,5 +120,6 @@ namespace EmgDiscordPost
 
             await PostAsync(postStr);
         }
+        */
     }
 }

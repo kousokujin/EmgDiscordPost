@@ -10,6 +10,7 @@ namespace EmgDiscordPost
         void postStr(string content);
         void connect();
         void disconnect();
+        Task PostAsync(string content);
     }
 
     interface IemgPost : IPostService
@@ -20,10 +21,10 @@ namespace EmgDiscordPost
         void addOrderword(string word);
 
         //緊急クエストが始まる前・始まった時
-        Task postEmgTime(emgQuest emg,int interval);
+        //Task postEmgTime(emgQuest emg,int interval);
 
         //緊急クエストの一覧を投稿
-        Task postListEmg(List<EventData> data, DateTime time, bool Lodos);
+        //Task postListEmg(List<EventData> data, DateTime time, bool Lodos);
 
     }
 }
