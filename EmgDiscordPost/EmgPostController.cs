@@ -39,9 +39,18 @@ namespace EmgDiscordPost
             setLodosDay();
 
             service.OrderEmg += OrderReplay;
+            service.addFillter(evFill);
 
             loop = false;
             Task t = StartLoop();
+        }
+
+        //リプライが来た時のフィルター
+        private bool evFill(string content)
+        {
+            string[] contentSprit = content.Replace("　", " ").Split(' '); //全角スペースを半角スペースに変換
+            (JobClass mainclass, JobClass subclass) = myFunction.convertJobClass(contentSprit[0]);
+            return (mainclass != JobClass.None && subclass != JobClass.None) || (mainclass == JobClass.Hr);
         }
 
         //緊急クエストが始まる時に使う

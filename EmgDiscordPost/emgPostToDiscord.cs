@@ -5,11 +5,18 @@ using System.Threading.Tasks;
 
 namespace EmgDiscordPost
 {
+
+    //リプライが来た時のフィルター(trueでイベントを実行しない)
+    public delegate bool ReplayFillter(string content);
+
     class emgPostToDiscord : DiscordService,IemgPost
     {
         //緊急クエスト問い合わせのワード
         List<string> orderwords;
         public event EventHandler OrderEmg;
+
+        //trueの時実行しない
+        public ReplayFillter fillter;
 
         public emgPostToDiscord(string token, ulong id, string bot) : base(token, id, bot)
         {
@@ -37,13 +44,20 @@ namespace EmgDiscordPost
                         isOrder = true;
                     }
                 }
-                if (isOrder)    //問い合わせワードが含まれていたら
+
+                bool isfillter = fillter(data.content);
+
+                if (isOrder && !isfillter)    //問い合わせワードが含まれていたら
                 {
                     OrderEmg?.Invoke(this, data);
                 }
             }
         }
 
+        public void addFillter(ReplayFillter fillter)
+        {
+            this.fillter += fillter;
+        }
         //緊急クエストが始まる前・始まった時に使う
         /*
         public async Task postEmgTime(emgQuest emg,int interval)

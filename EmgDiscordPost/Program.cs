@@ -54,10 +54,17 @@ namespace EmgDiscordPost
             discord.postStr(content);
             */
 
+            /*
             IemgPost postSrv = new emgPostToDiscord(token, channelID, BOT_NAME);
             EmgPostController con = new EmgPostController(postSrv);
 
             con.todayEmgOrder += Recive;
+
+            */
+
+            IjoinPost join = new joinPostDiscord(token, channelID, BOT_NAME);
+            join.joinEvent += joinEv;
+            join.replayEvent += Replay;
 
             Console.ReadLine();
         }
@@ -77,6 +84,14 @@ namespace EmgDiscordPost
             {
                 ReceiveData d = data as ReceiveData;
                 Console.WriteLine("リプライ:{0}", d.content);
+            }
+        }
+
+        static void joinEv(object sender, EventArgs data) {
+            if(data is joinArg)
+            {
+                joinArg j = data as joinArg;
+                Console.WriteLine("From:{0} Class:{1}{2} note{3}",j.Author,j.mainClass,j.subClass,j.content);
             }
         }
     }

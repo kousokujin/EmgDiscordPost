@@ -17,8 +17,9 @@ namespace EmgDiscordPost
     {
         //緊急クエストの問い合わせが来た時のイベント
         event EventHandler OrderEmg;
-
+        void addFillter(ReplayFillter fillter);
         void addOrderword(string word);
+
 
         //緊急クエストが始まる前・始まった時
         //Task postEmgTime(emgQuest emg,int interval);
@@ -26,5 +27,16 @@ namespace EmgDiscordPost
         //緊急クエストの一覧を投稿
         //Task postListEmg(List<EventData> data, DateTime time, bool Lodos);
 
+    }
+
+    interface IjoinPost : IPostService
+    {
+        //リプライが来たとき
+        event EventHandler replayEvent;
+
+        //参加表明イベント
+        event EventHandler joinEvent;
+
+        void addWord(string word);
     }
 }
