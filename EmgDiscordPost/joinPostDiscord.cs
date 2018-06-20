@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Discord.WebSocket;
+using Discord;
 
 namespace EmgDiscordPost
 {
@@ -8,17 +10,27 @@ namespace EmgDiscordPost
     {
         //参加表明が出たとき
         public event EventHandler joinEvent;
+        //キャンセルが出た時
+        public event EventHandler cancelEvent;
 
         //リプライが来たとき
         public event EventHandler replayEvent;
 
         List<string> joinwords;
+        List<string> cancelword;
 
         public joinPostDiscord(string token,ulong id,string bot) : base(token, id, bot)
         {
             ReceiveReplay += replayEventProcess;
             joinwords = new List<string>();
-            initaddWord();
+            cancelword = new List<string>();
+        }
+
+        public joinPostDiscord(DiscordSocketClient client)  : base(client)
+        {
+            ReceiveReplay += replayEventProcess;
+            joinwords = new List<string>();
+            cancelword = new List<string>();
         }
 
         public void addWord(string word)
@@ -26,13 +38,9 @@ namespace EmgDiscordPost
             joinwords.Add(word);
         }
 
-        public void initaddWord()   //参加とするワード
+        public void addCancelword(string word)
         {
-            addWord("参加");
-            addWord("参加");
-            addWord("行きます");
-            addWord("join");
-
+            cancelword.Add(word);
         }
 
         //Discordにリプライがきたときのイベント
@@ -41,6 +49,16 @@ namespace EmgDiscordPost
             if (e is ReceiveData)
             {
                 ReceiveData data = e as ReceiveData;
+
+                foreach(string s in cancelword) //キャンセルが出た時
+                {
+                    if(s == data.content)
+                    {
+                        //キャンセルが出た時
+                        cancelEvent?.Invoke(this, data);
+                        return;
+                    }
+                }
 
                 foreach (string s in joinwords)  //参加する場合
                 {

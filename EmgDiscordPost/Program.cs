@@ -65,6 +65,7 @@ namespace EmgDiscordPost
             IjoinPost join = new joinPostDiscord(token, channelID, BOT_NAME);
             join.joinEvent += joinEv;
             join.replayEvent += Replay;
+            join.cancelEvent += cancelEv;
 
             Console.ReadLine();
         }
@@ -92,6 +93,15 @@ namespace EmgDiscordPost
             {
                 joinArg j = data as joinArg;
                 Console.WriteLine("From:{0} Class:{1}{2} note{3}",j.Author,j.mainClass,j.subClass,j.content);
+            }
+        }
+
+        static void cancelEv(object sender, EventArgs data)
+        {
+            if (data is ReceiveData)
+            {
+                ReceiveData j = data as ReceiveData;
+                Console.WriteLine("Cancel:{0}", j.Author);
             }
         }
     }

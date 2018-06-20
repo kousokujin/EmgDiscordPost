@@ -37,6 +37,10 @@ namespace EmgDiscordPost
         //参加表明イベント
         event EventHandler joinEvent;
 
+        //キャンセルが出た時
+        event EventHandler cancelEvent;
+
         void addWord(string word);
+        void addCancelword(string word);
     }
 }

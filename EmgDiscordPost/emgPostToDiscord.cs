@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 
 namespace EmgDiscordPost
 {
@@ -19,6 +21,12 @@ namespace EmgDiscordPost
         public ReplayFillter fillter;
 
         public emgPostToDiscord(string token, ulong id, string bot) : base(token, id, bot)
+        {
+            orderwords = new List<string>();
+            ReceiveReplay += replayEvent;
+        }
+
+        public emgPostToDiscord(DiscordSocketClient client) : base(client)
         {
             orderwords = new List<string>();
             ReceiveReplay += replayEvent;

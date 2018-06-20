@@ -35,10 +35,17 @@ namespace EmgDiscordPost
             connect();
         }
 
+        public DiscordService(DiscordSocketClient client)
+        {
+            this.client = client;
+            connect();
+        }
+
         public override void connect()
         {
             Task conection = StartClient();
             conection.Wait();
+            logOutput.writeLog("Discordに接続しました");
         }
 
         public override void disconnect()
