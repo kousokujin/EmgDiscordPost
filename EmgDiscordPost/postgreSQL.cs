@@ -63,26 +63,31 @@ namespace EmgDiscordPost
                 return 1;
             }
 
-            NpgsqlConnection con = NpgConnect();
-            NpgsqlCommand command = new NpgsqlCommand(que, con);
-            if(con != null) {
-
-                try
-                {
-                    var result = command.ExecuteReader();
-                    disconnect(con);
-                    return result;
-                }
-                catch (Npgsql.PostgresException e)
-                {
-                    logOutput.writeLog("SQLを実行できません。({0})", e.MessageText);
-                    return 1;
-                }
-            }
-            else
+            using (NpgsqlConnection con = NpgConnect())
             {
-                logOutput.writeLog("データベースへのクエリの実行ができません。");
-                return 1;
+                using (NpgsqlCommand command = new NpgsqlCommand(que, con))
+                {
+                    if (con != null)
+                    {
+
+                        try
+                        {
+                            var result = command.ExecuteReader();
+                            disconnect(con);
+                            return result;
+                        }
+                        catch (Npgsql.PostgresException e)
+                        {
+                            logOutput.writeLog("SQLを実行できません。({0})", e.MessageText);
+                            return 1;
+                        }
+                    }
+                    else
+                    {
+                        logOutput.writeLog("データベースへのクエリの実行ができません。");
+                        return 1;
+                    }
+                }
             }
         }
 
@@ -158,21 +163,28 @@ namespace EmgDiscordPost
 
         public override object ListParamCommand(string que, List<object> par)
         {
-            NpgsqlConnection connection = NpgConnect();
-            NpgsqlCommand command = new NpgsqlCommand(que,connection);
-
-            foreach (object obj in par)
+            using (NpgsqlConnection connection = NpgConnect())
             {
-                if(obj is NpgsqlParameter)
+                using (NpgsqlCommand command = new NpgsqlCommand(que, connection))
                 {
-                    NpgsqlParameter np = obj as NpgsqlParameter;
-                    command.Parameters.Add(np);
+
+                    foreach (object obj in par)
+                    {
+                        if (obj is NpgsqlParameter)
+                        {
+                            NpgsqlParameter np = obj as NpgsqlParameter;
+                            command.Parameters.Add(np);
+                        }
+                    }
+
+                    var result = command.ExecuteReader();
+                    return result;
                 }
             }
-
-            var result = command.ExecuteReader();
+            /*
             disconnect(connection);
             return result;
+            */
 
         }
 
