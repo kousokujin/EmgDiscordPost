@@ -18,7 +18,7 @@ namespace EmgDiscordPost
         public event EventHandler OrderEmg;
 
         //trueの時実行しない
-        public ReplayFillter fillter;
+        //public ReplayFillter fillter;
 
         public emgPostToDiscord(string token, ulong id, string bot) : base(token, id, bot)
         {
@@ -53,19 +53,26 @@ namespace EmgDiscordPost
                     }
                 }
 
-                bool isfillter = fillter(data.content);
+               // bool isfillter = fillter(data.content);
 
-                if (isOrder && !isfillter)    //問い合わせワードが含まれていたら
+                if (isOrder)    //問い合わせワードが含まれていたら
                 {
                     OrderEmg?.Invoke(this, data);
                 }
             }
         }
 
+        public List<string> getOrderwords()
+        {
+            return orderwords;
+        }
+
+        /*
         public void addFillter(ReplayFillter fillter)
         {
             this.fillter += fillter;
         }
+        */
         //緊急クエストが始まる前・始まった時に使う
         /*
         public async Task postEmgTime(emgQuest emg,int interval)

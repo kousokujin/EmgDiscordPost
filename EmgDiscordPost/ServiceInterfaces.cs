@@ -17,8 +17,9 @@ namespace EmgDiscordPost
     {
         //緊急クエストの問い合わせが来た時のイベント
         event EventHandler OrderEmg;
-        void addFillter(ReplayFillter fillter);
+        //void addFillter(ReplayFillter fillter);
         void addOrderword(string word);
+        List<string> getOrderwords();
 
 
         //緊急クエストが始まる前・始まった時
@@ -42,5 +43,6 @@ namespace EmgDiscordPost
 
         void addWord(string word);
         void addCancelword(string word);
+        List<string> getOrderwords();
     }
 }

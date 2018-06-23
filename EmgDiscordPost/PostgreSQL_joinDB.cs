@@ -6,7 +6,7 @@ using Npgsql;
 
 namespace EmgDiscordPost
 {
-    class PostgreSQL_joinDB : postgreSQL
+    class PostgreSQL_joinDB : postgreSQL,IJoinMemberDB
     {
         string tablename;
         int id;
@@ -111,6 +111,8 @@ namespace EmgDiscordPost
                     parm.Add(new NpgsqlParameter("note", DbType.String) { Value = member.content });
 
                 }
+
+                logOutput.writeLog("{0}を変更しました。",member.Author);
             }
 
             //command(que);
@@ -133,11 +135,34 @@ namespace EmgDiscordPost
 
         }
 
+        //メンバー一覧を取得
+        public List<joinArg> getMemberList()
+        {
+            string que = string.Format("SELECT name,mainclass,subclass,note FROM {0} ;", tablename);
+            List<List<object>> res = selectQue(que);
+            List<joinArg> outList = new List<joinArg>();
+
+            foreach(List<object> lstObj in res)
+            {
+                string name = (string)lstObj[0];
+                JobClass mainclass = (JobClass)((int)lstObj[1]);
+                JobClass subClass = (JobClass)((int)lstObj[2]);
+                string note = (string)lstObj[3];
+
+                joinArg tmp = new joinArg(name, note, mainclass, subClass);
+                outList.Add(tmp);
+            }
+
+            return outList;
+        }
+
         private (int key, bool membered) isMemberd(joinArg member)
         {
-            string QueStr = string.Format("SELECT ID,name FROM {0} WHERE name = '{1}';", tablename, member.Author);
+            string QueStr = string.Format("SELECT ID,name FROM {0} WHERE name = ':name';", tablename);
+            List<object> para = new List<object>();
+            para.Add(new NpgsqlParameter("name", DbType.String) { Value = member.Author });
 
-            List<List<object>> table = selectQue(QueStr);
+            List<List<object>> table = selectParamQue(QueStr,para);
             bool isMember = false;
             int id = 0;
 

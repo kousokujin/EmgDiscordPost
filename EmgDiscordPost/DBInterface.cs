@@ -27,4 +27,15 @@ namespace EmgDiscordPost
         List<string> getChpList();
         void setTable(string tablename);
     }
+
+    //参加メンバーを管理するデータベースについて
+    interface IJoinMemberDB : IDatabase
+    {
+        void cleartable();
+        void droptable();
+        void createtable();
+        bool addMember(joinArg member);
+        void deleteMember(string name);
+        List<joinArg> getMemberList();
+    }
 }

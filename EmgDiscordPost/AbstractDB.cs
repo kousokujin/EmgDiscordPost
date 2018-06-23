@@ -34,7 +34,15 @@ namespace EmgDiscordPost
         public abstract object ListParamCommand(string que, List<object> par);
 
         //SELECT文
-        public abstract List<List<object>> selectQue(string que);
+        //public abstract List<List<object>> selectQue(string que);
+        public virtual List<List<object>> selectQue(string que)
+        {
+            List<object> par = new List<object>();
+            return selectParamQue(que, par);
+        }
+
+        //SELECT文(パラメータ指定)
+        public abstract List<List<object>> selectParamQue(string que, List<object> par);
 
         public abstract string getDBType();
 

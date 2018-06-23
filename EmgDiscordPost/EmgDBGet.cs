@@ -41,7 +41,13 @@ namespace EmgDiscordPost
             }
 
             return next;
+        }
 
+        //timeで指定した日の緊急クエスト一覧を返す
+        public List<EventData> getListEvent(DateTime time)
+        {
+            DateTime fixTime = new DateTime(time.Year, time.Month, time.Day, 0, 0, 0);
+            return Emgdb.getEmgList(fixTime, fixTime + new TimeSpan(1, 0, 0, 0));
         }
     }
 }

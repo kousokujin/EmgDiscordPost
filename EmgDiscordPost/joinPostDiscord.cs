@@ -43,6 +43,23 @@ namespace EmgDiscordPost
             cancelword.Add(word);
         }
 
+        public List<string> getOrderwords()
+        {
+            List<string> output = new List<string>();
+
+            foreach(string s in joinwords)
+            {
+                output.Add(s);
+            }
+
+            foreach(string s in cancelword)
+            {
+                output.Add(s);
+            }
+
+            return output;
+        }
+
         //Discordにリプライがきたときのイベント
         private void replayEventProcess(object sender, EventArgs e)
         {

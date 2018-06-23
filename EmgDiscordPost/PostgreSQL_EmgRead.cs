@@ -23,7 +23,7 @@ namespace EmgDiscordPost
         {
             List<EventData> outputData = new List<EventData>();
 
-            string que = string.Format("SELECT id, emgname,livename,emgtime,emgtype FROM {0} WHERE emgtime > '{1}' AND emgtime < '{2}' ORDER BY emgtime ASC;", tablename,start.ToString(),end.ToString());
+            string que = string.Format("SELECT id, emgname,livename,emgtime,emgtype FROM {0} WHERE emgtime >= '{1}' AND emgtime < '{2}' ORDER BY emgtime ASC;", tablename,start.ToString(),end.ToString());
             List<List<object>> outtable = selectQue(que);
 
             foreach (List<object> o in outtable)

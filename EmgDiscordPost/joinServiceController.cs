@@ -24,11 +24,39 @@ namespace EmgDiscordPost
 
         public void initaddWord()   //参加・キャンセルワードの追加
         {
-            joinClient.addWord("参加");
-            joinClient.addWord("行きます");
-            joinClient.addWord("join");
+            addWord("参加");
+            addWord("行きます");
+            addWord("join");
             joinClient.addCancelword("キャンセル");
             joinClient.addCancelword("cancel");
+        }
+
+        public override void addWord(string word)
+        {
+            joinClient.addWord(word);
+        }
+
+        public override bool isWord(string word)
+        {
+            bool isOutput = false;
+
+            foreach (string s in joinClient.getOrderwords())
+            {
+                if (s == word)
+                {
+                    isOutput = true;
+                }
+            }
+
+            //クラスだけ
+            (JobClass main, JobClass sub) = myFunction.convertJobClass(word);
+
+            if ((main != JobClass.None && sub != JobClass.None) || (main == JobClass.Hr))
+            {
+                isOutput = true;
+            }
+
+            return isOutput;
         }
 
 

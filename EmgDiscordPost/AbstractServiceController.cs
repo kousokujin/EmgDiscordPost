@@ -13,5 +13,11 @@ namespace EmgDiscordPost
             this.service = service;
         }
 
+        //Discordのリプライで反応する言葉
+        public abstract void addWord(string word);
+
+        //Discordのリプライで反応するかどうか
+        public abstract bool isWord(string word);
+
     }
 }

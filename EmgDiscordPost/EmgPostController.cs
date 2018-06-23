@@ -33,13 +33,13 @@ namespace EmgDiscordPost
         public EmgPostController(IemgPost service) : base(service)
         {
             this.emgService = service;
-            addWords();
+            InitaddWords();
             setNextNotify();
             setNextDay();
             setLodosDay();
 
             service.OrderEmg += OrderReplay;
-            service.addFillter(evFill);
+            //service.addFillter(evFill);
 
             loop = false;
             Task t = StartLoop();
@@ -100,13 +100,32 @@ namespace EmgDiscordPost
             await emgService.PostAsync(postStr);
         }
 
-        //問い合わせのワードを追加
-        private void addWords()
+        //初期問い合わせのワードを追加
+        private void InitaddWords()
         {
-            emgService.addOrderword("今日の緊急");
-            emgService.addOrderword("明日の緊急");
+            addWord("今日の緊急");
+            addWord("明日の緊急");
         }
 
+        override public void addWord(string word)
+        {
+            emgService.addOrderword(word);
+        }
+
+        public override bool isWord(string word)
+        {
+            bool isOutput = false;
+
+            foreach(string s in emgService.getOrderwords())
+            {
+                if(s == word)
+                {
+                    isOutput = true;
+                }
+            }
+
+            return isOutput;
+        }
         //次の通知時間
         private void setNextNotify()
         {

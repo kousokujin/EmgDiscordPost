@@ -44,6 +44,26 @@ namespace EmgDiscordPost
 
         }
 
+        public override void addWord(string word)
+        {
+            chpService.addOrderword(word);   
+        }
+
+        public override bool isWord(string word)
+        {
+            bool isOutput = false;
+
+            foreach (string s in chpService.getOrderwords())
+            {
+                if (s == word)
+                {
+                    isOutput = true;
+                }
+            }
+
+            return isOutput;
+        }
+
         private void Loop() //イベントループ
         {
             while (EventLoop)

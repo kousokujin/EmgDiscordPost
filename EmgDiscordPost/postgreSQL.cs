@@ -91,9 +91,27 @@ namespace EmgDiscordPost
             }
         }
 
+        /*
         public override List<List<object>> selectQue(string que)
         {
+            List<object> par = new List<object>();
+            return selectParamQue(que, par);
+        }
+        */
+
+        public override List<List<object>> selectParamQue(string que,List<object> par)
+        {
             List<List<object>> table = new List<List<object>>();
+            List<NpgsqlParameter> npgPars = new List<NpgsqlParameter>();
+
+            //パラメータの設定
+            foreach(object o in par)
+            {
+                if(o is NpgsqlParameter)
+                {
+                    npgPars.Add(o as NpgsqlParameter);
+                }
+            }
 
             using(var connect = NpgConnect())
             {
@@ -101,6 +119,11 @@ namespace EmgDiscordPost
 
                 using(var cmd = new NpgsqlCommand(que, connect))
                 {
+                    foreach(NpgsqlParameter np in npgPars)
+                    {
+                        cmd.Parameters.Add(np);
+                    }
+
                     try
                     {
                         using (var reader = cmd.ExecuteReader())
