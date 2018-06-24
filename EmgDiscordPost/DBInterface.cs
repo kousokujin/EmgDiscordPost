@@ -28,6 +28,17 @@ namespace EmgDiscordPost
         void setTable(string tablename);
     }
 
+    //覇者の紋章通知時間に関するインターフェース
+    interface IChpTimeDB : IDatabase
+    {
+        void setTable(string tablename);
+        void createtable();
+        void droptable();
+        void cleartable();
+        List<DateTime> getNotifyTime();
+        void addChpTable(int week, int hour, int min, int sec);
+    }
+
     //参加メンバーを管理するデータベースについて
     interface IJoinMemberDB : IDatabase
     {
