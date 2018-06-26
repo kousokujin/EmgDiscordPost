@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Data;
 using Npgsql;
+using NpgsqlTypes;
 
 namespace EmgDiscordPost
 {
@@ -51,7 +52,7 @@ namespace EmgDiscordPost
         public bool addMember(joinArg member)
         {
             (int key, bool memberd) = isMemberd(member);
-            List<object> parm = new List<object>();
+            List<NpgsqlParameter> parm = new List<NpgsqlParameter>();
             string que = "";
 
             if (!memberd)   //初めて追加
@@ -65,12 +66,27 @@ namespace EmgDiscordPost
                     member.content,
                     DateTime.Now.ToString());
                     */
-                que = string.Format("INSERT INTO {0} (ID,name,mainclass,subclass,note,jointime VALUES (':id',':author',':main',':sub',':note');", tablename);
-                parm.Add(new NpgsqlParameter("id", DbType.Int32) { Value = id });
-                parm.Add(new NpgsqlParameter("author", DbType.String) { Value = member.Author });
-                parm.Add(new NpgsqlParameter("main", DbType.Int32) { Value = member.mainClass });
-                parm.Add(new NpgsqlParameter("sub", DbType.Int32) { Value = member.subClass });
-                parm.Add(new NpgsqlParameter("note", DbType.String) { Value = member.content });
+                que = string.Format("INSERT INTO {0} (ID,name,mainclass,subclass,note,jointime) VALUES (:id,:author,:main,:sub,:note,'{1}');", tablename,DateTime.Now.ToString());
+                
+                /*
+                parm.Add(new NpgsqlParameter("id", NpgsqlDbType.Integer) { Value = id });
+                parm.Add(new NpgsqlParameter("author", NpgsqlDbType.Text) { Value = member.Author });
+                parm.Add(new NpgsqlParameter("main", NpgsqlDbType.Integer) { Value = member.mainClass });
+                parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer) { Value = member.subClass });
+                parm.Add(new NpgsqlParameter("note", NpgsqlDbType.Text) { Value = member.content });
+                */
+                
+                parm.Add(new NpgsqlParameter("id", NpgsqlDbType.Integer));
+                parm.Add(new NpgsqlParameter("author", NpgsqlDbType.Text));
+                parm.Add(new NpgsqlParameter("main", NpgsqlDbType.Integer));
+                parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer));
+                parm.Add(new NpgsqlParameter("note", NpgsqlDbType.Text));
+
+                parm[0].Value = id;
+                parm[1].Value = member.Author;
+                parm[2].Value = (int)member.mainClass;
+                parm[3].Value = (int)member.subClass;
+                parm[4].Value = member.content;
 
                 id++;
 
@@ -90,10 +106,21 @@ namespace EmgDiscordPost
                     */
 
                     que = string.Format("UPDATE {0} SET mainclass = :main ,subclass = :sub WHERE id = :id;",tablename);
+
+                    /*
                     parm.Add(new NpgsqlParameter("id", DbType.Int32) { Value = key });
                     parm.Add(new NpgsqlParameter("main", DbType.Int32) { Value = member.mainClass });
                     parm.Add(new NpgsqlParameter("sub", DbType.Int32) { Value = member.subClass });
-                    //parm.Add(new NpgsqlParameter("content", DbType.String) { Value = member.content });
+                    */
+
+                    parm.Add(new NpgsqlParameter("id", NpgsqlDbType.Integer));
+                    parm.Add(new NpgsqlParameter("main", NpgsqlDbType.Integer));
+                    parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer));
+
+                    parm[0].Value = key;
+                    parm[1].Value = (int)member.mainClass;
+                    parm[2].Value = (int)member.subClass;
+
 
                 }
                 else
@@ -107,10 +134,22 @@ namespace EmgDiscordPost
                                 id);
                     */
                     que = string.Format("UPDATE {0} SET mainclass = :main ,subclass = :sub,note = :note WHERE id = :id;", tablename);
+                    /*
                     parm.Add(new NpgsqlParameter("id", DbType.Int32) { Value = key });
                     parm.Add(new NpgsqlParameter("main", DbType.Int32) { Value = member.mainClass });
                     parm.Add(new NpgsqlParameter("sub", DbType.Int32) { Value = member.subClass });
                     parm.Add(new NpgsqlParameter("note", DbType.String) { Value = member.content });
+                    */
+
+                    parm.Add(new NpgsqlParameter("id", NpgsqlDbType.Integer));
+                    parm.Add(new NpgsqlParameter("main", NpgsqlDbType.Integer));
+                    parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer));
+                    parm.Add(new NpgsqlParameter("note", NpgsqlDbType.Text));
+
+                    parm[0].Value = key;
+                    parm[1].Value = (int)member.mainClass;
+                    parm[2].Value = (int)member.subClass;
+                    parm[3].Value = member.content;
 
                 }
 
@@ -118,7 +157,14 @@ namespace EmgDiscordPost
             }
 
             //command(que);
-            ListParamCommand(que, parm);
+
+            List<object> outputobj = new List<object>();
+            foreach(NpgsqlParameter p in parm)
+            {
+                outputobj.Add(p);
+            }
+
+            ListParamCommand(que, outputobj);
 
             return memberd;
         }
@@ -127,7 +173,9 @@ namespace EmgDiscordPost
         public void deleteMember(string name)
         {
             string que = string.Format("DELETE FROM {0} WHERE name = :name;", tablename);
-            NpgsqlParameter parm = new NpgsqlParameter("name", DbType.String) { Value = name };
+            //NpgsqlParameter parm = new NpgsqlParameter("name", DbType.String) { Value = name };
+            NpgsqlParameter parm = new NpgsqlParameter("name", NpgsqlDbType.Text);
+            parm.Value = name;
             List<object> ListParam = new List<object>();
             ListParam.Add(parm);
 
@@ -160,9 +208,13 @@ namespace EmgDiscordPost
 
         private (int key, bool membered) isMemberd(joinArg member)
         {
-            string QueStr = string.Format("SELECT ID,name FROM {0} WHERE name = ':name';", tablename);
+            string QueStr = string.Format("SELECT ID,name FROM {0} WHERE name = :name;", tablename);
             List<object> para = new List<object>();
-            para.Add(new NpgsqlParameter("name", DbType.String) { Value = member.Author });
+            //para.Add(new NpgsqlParameter("name", DbType.String) { Value = member.Author });
+            NpgsqlParameter p = new NpgsqlParameter("name", NpgsqlDbType.Text);
+            p.Value = member.Author;
+            para.Add(p);
+            
 
             List<List<object>> table = selectParamQue(QueStr,para);
             bool isMember = false;

@@ -8,64 +8,26 @@ namespace EmgDiscordPost
         static void Main(string[] args)
         {
             //テストコード
-
             /*
             string address = "2400:2410:d0e1:6500:f7d3:f0cb:14b4:5dac";
             string user = "docker";
             string pass = "docker";
             string database = "docker";
 
-            
-            IChpDataRead chp = new PostgreSQL_ChpRead(address,database,user,pass);
-            List<string> lst = chp.getChpList();
-
-            foreach(string s in lst)
-            {
-                Console.WriteLine(s);
-            }
-            
-
-            IEmgDBRead emg = new PostgreSQL_EmgRead(address, database, user, pass);
-            DateTime start = DateTime.Now;
-            DateTime end = new DateTime(start.Year, start.Month, start.Day, 0, 0, 0);
-
-            end += new TimeSpan(24, 0, 0);
-            List<EventData> emData = emg.getEmgList(start, end);
-
-            foreach(EventData e in emData)
-            {
-                Console.WriteLine("[{0}]{1}", e.eventTime.ToString(), e.eventName);
-            }
-            
-            Console.ReadLine();
+            IJoinMemberDB db = new PostgreSQL_joinDB(address, database, user, pass);
+            joinArg arg = new joinArg("kousokujin", "test", JobClass.Bo, JobClass.Hu);
+            db.droptable();
+            db.createtable();
+            db.addMember(arg);
+            arg = new joinArg("kousokujin", "", JobClass.Fo, JobClass.Te);
+            db.addMember(arg);
             */
 
             Console.Write("Token:");
             string token = Console.ReadLine();
-            ulong channelID = 348314939934375938;
-            string BOT_NAME = "testApplication";
-
-            /*
-            DiscordService discord = new DiscordService(token, channelID, BOT_NAME);
-
-            discord.ReceiveEvent += Recive;
-            discord.ReceiveReplay += Replay;
-            string content = Console.ReadLine();
-            discord.postStr(content);
-            */
-
-            /*
-            IemgPost postSrv = new emgPostToDiscord(token, channelID, BOT_NAME);
-            EmgPostController con = new EmgPostController(postSrv);
-
-            con.todayEmgOrder += Recive;
-
-            */
-
-            IjoinPost join = new joinPostDiscord(token, channelID, BOT_NAME);
-            join.joinEvent += joinEv;
-            join.replayEvent += Replay;
-            join.cancelEvent += cancelEv;
+            ulong id = 0000000000000;
+            joinPostDiscord ser = new joinPostDiscord(token, id, "testApplication");
+            ser.joinEvent += joinEv;
 
             Console.ReadLine();
         }

@@ -82,7 +82,7 @@ namespace EmgDiscordPost
                     if(s == data.content)
                     {
                         //参加クラス未定で参加
-                        joinArg join = new joinArg(data.Author, "", JobClass.None, JobClass.None);
+                        joinArg join = new DiscordJoinArg(data.Author, "", JobClass.None, JobClass.None);
                         joinEvent(this, join);
                         return;
                     }
@@ -102,13 +102,13 @@ namespace EmgDiscordPost
 
                 if((mainclass != JobClass.None && subClass != JobClass.None)||(mainclass == JobClass.Hr)) //メインクラスもサブクラスも定義されてる場合
                 {
-                    joinArg join = new joinArg(data.Author, note, mainclass, subClass);
+                    joinArg join = new DiscordJoinArg(data.Author, note, mainclass, subClass);
                     joinEvent(this, join);
                     return;
                 }
 
                 //なにもない場合にはリプライイベント
-                replayEvent(this, data);
+                replayEvent?.Invoke(this, data);
 
                 /*
                 if (splitedStr[0].Length >= 2)
@@ -171,6 +171,18 @@ namespace EmgDiscordPost
             this.mainClass = mainClass;
             this.subClass = subClass;
         }  
+    }
+
+    class DiscordJoinArg : joinArg
+    {
+        string discordID;
+
+        public DiscordJoinArg(string author, string content, JobClass mainclass, JobClass subclass) : base("", content, mainclass, subclass)
+        {
+            string[] separate = author.Split('#');
+            Author = separate[0];
+            discordID = separate[1];
+        }
     }
 
     //PSO2職業列挙型

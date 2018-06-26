@@ -178,6 +178,11 @@ namespace EmgDiscordPost
                         logOutput.writeLog("データベースの接続に失敗しました。");
                         return table;
                     }
+                    catch (Npgsql.PostgresException)
+                    {
+                        logOutput.writeLog("テーブルが存在しません。");
+                        return table;
+                    }
                 }
 
                 return table;
