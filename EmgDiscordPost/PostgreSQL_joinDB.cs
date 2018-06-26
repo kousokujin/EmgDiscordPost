@@ -6,9 +6,9 @@ using Npgsql;
 
 namespace EmgDiscordPost
 {
-    class PostgreSQL_joinDB : postgreSQL,IJoinMemberDB
+    class PostgreSQL_joinDB : PostgreSQL_Loader,IJoinMemberDB
     {
-        string tablename;
+        //string tablename;
         int id;
 
         public PostgreSQL_joinDB(string address, string DBname, string user, string password) : base(address, DBname, user, password)
@@ -17,6 +17,7 @@ namespace EmgDiscordPost
             id = 0;
         }
 
+        /*
         public void setTable(string tableName)
         {
             this.tablename = tableName;
@@ -34,6 +35,7 @@ namespace EmgDiscordPost
             logOutput.writeLog("参加者テーブルを削除します。");
             command(string.Format("DROP TABLE {0};", tablename));
         }
+        */
 
         public void createtable()
         {

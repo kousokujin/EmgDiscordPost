@@ -5,19 +5,21 @@ using Npgsql;
 
 namespace EmgDiscordPost
 {
-    class PostgreSQL_ChpRead : postgreSQL, IChpDataRead
+    class PostgreSQL_ChpRead : PostgreSQL_Loader, IChpDataRead
     {
-        string tablename;
+        //string tablename;
 
         public PostgreSQL_ChpRead(string address, string DBname, string user, string password) : base(address, DBname, user, password)
         {
             tablename = "PSO2ChpTable";
         }
 
+        /*
         public void setTable(string table)
         {
             this.tablename = table;
         }
+        */
 
         public List<string> getChpList()
         {

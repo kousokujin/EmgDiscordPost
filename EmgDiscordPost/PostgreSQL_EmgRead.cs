@@ -4,9 +4,9 @@ using System.Text;
 
 namespace EmgDiscordPost
 {
-    class PostgreSQL_EmgRead : postgreSQL, IEmgDBRead
+    class PostgreSQL_EmgRead : PostgreSQL_Loader, IEmgDBRead
     {
-        string tablename;
+        //string tablename;
 
         public PostgreSQL_EmgRead(string address, string DBname, string user, string password) : base(address, DBname, user, password)
         {
@@ -14,10 +14,12 @@ namespace EmgDiscordPost
         }
 
 
+        /*
         public void setTable(string t)
         {
             this.tablename = t;
         }
+        */
 
         public List<EventData> getEmgList(DateTime start,DateTime end)
         {

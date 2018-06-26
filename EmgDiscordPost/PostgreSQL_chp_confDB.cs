@@ -4,19 +4,21 @@ using System.Text;
 
 namespace EmgDiscordPost
 {
-    class PostgreSQL_chp_confDB : postgreSQL,IChpTimeDB
+    class PostgreSQL_chp_confDB : PostgreSQL_Loader,IChpTimeDB
     {
-        string tablename;
+        //string tablename;
 
         public PostgreSQL_chp_confDB(string address,string DBname,string user,string password) : base(address, DBname, user, password)
         {
             tablename = "chpTimeTable";
         }
 
+        /*
         public void setTable(string tablename)
         {
             this.tablename = tablename;
         }
+        */
 
         public void createtable()
         {
@@ -25,6 +27,7 @@ namespace EmgDiscordPost
             command(que);
         }
 
+        /*
         public void droptable()
         {
             logOutput.writeLog("覇者の紋章時刻テーブルを削除します。");
@@ -36,6 +39,7 @@ namespace EmgDiscordPost
             logOutput.writeLog("覇者の紋章時刻テーブルの内容を削除します。");
             command(string.Format("TRUNCATE table {0} restart identity;", tablename));
         }
+        */
 
         //データベースから通知時間を取得
         public List<DateTime> getNotifyTime()

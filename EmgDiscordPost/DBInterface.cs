@@ -15,38 +15,57 @@ namespace EmgDiscordPost
         string getDBType();
     }
 
-    //EventDataのデータをDBに書き込むためのインターフェイス
-    interface IEmgDBRead : IDatabase
+    interface IDBLoader : IDatabase
     {
-        List<EventData> getEmgList(DateTime start, DateTime end);
         void setTable(string tablename);
+        void droptable();
+        void cleartable();
     }
 
-    interface IChpDataRead : IDatabase
+    //EventDataのデータをDBに書き込むためのインターフェイス
+    interface IEmgDBRead : IDBLoader
+    {
+        List<EventData> getEmgList(DateTime start, DateTime end);
+        //void setTable(string tablename);
+    }
+
+    interface IChpDataRead : IDBLoader
     {
         List<string> getChpList();
-        void setTable(string tablename);
+        //void setTable(string tablename);
     }
 
     //覇者の紋章通知時間に関するインターフェース
-    interface IChpTimeDB : IDatabase
+    interface IChpTimeDB : IDBLoader
     {
+        /*
         void setTable(string tablename);
         void createtable();
         void droptable();
         void cleartable();
+        */
         List<DateTime> getNotifyTime();
         void addChpTable(int week, int hour, int min, int sec);
     }
 
     //参加メンバーを管理するデータベースについて
-    interface IJoinMemberDB : IDatabase
+    interface IJoinMemberDB : IDBLoader
     {
+        /*
         void cleartable();
         void droptable();
+        */
         void createtable();
         bool addMember(joinArg member);
         void deleteMember(string name);
         List<joinArg> getMemberList();
     }
+
+    //データベースから設定を読み込むインターフェイス
+    interface IDBConfig : IDBLoader
+    {
+        void updateValue(string item, string value);
+    }
+
+
 }
