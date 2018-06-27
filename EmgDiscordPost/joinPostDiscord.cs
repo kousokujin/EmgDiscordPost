@@ -175,7 +175,7 @@ namespace EmgDiscordPost
 
     class DiscordJoinArg : joinArg
     {
-        string discordID;
+        public string discordID;
 
         public DiscordJoinArg(string author, string content, JobClass mainclass, JobClass subclass) : base("", content, mainclass, subclass)
         {

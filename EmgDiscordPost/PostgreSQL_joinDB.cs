@@ -42,7 +42,7 @@ namespace EmgDiscordPost
         {
             logOutput.writeLog("参加者テーブルを作成します。");
             string queStr = string.Format(
-                "CREATE TABLE {0} (ID int primary key,name text,mainclass int,subclass int,note text,jointime timestamp NOT NULL DEFAULT now());",
+                "CREATE TABLE {0} (ID int primary key,name text,tag text,mainclass int,subclass int,note text,jointime timestamp NOT NULL DEFAULT now());",
                 tablename);
 
             command(queStr);
@@ -57,36 +57,31 @@ namespace EmgDiscordPost
 
             if (!memberd)   //初めて追加
             {
-                /*
-                string values = string.Format("'{0}','{1}','{2}','{3}','{4}','{5}'",
-                    id,
-                    member.Author,
-                    member.mainClass,
-                    member.subClass,
-                    member.content,
-                    DateTime.Now.ToString());
-                    */
-                que = string.Format("INSERT INTO {0} (ID,name,mainclass,subclass,note,jointime) VALUES (:id,:author,:main,:sub,:note,'{1}');", tablename,DateTime.Now.ToString());
-                
-                /*
-                parm.Add(new NpgsqlParameter("id", NpgsqlDbType.Integer) { Value = id });
-                parm.Add(new NpgsqlParameter("author", NpgsqlDbType.Text) { Value = member.Author });
-                parm.Add(new NpgsqlParameter("main", NpgsqlDbType.Integer) { Value = member.mainClass });
-                parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer) { Value = member.subClass });
-                parm.Add(new NpgsqlParameter("note", NpgsqlDbType.Text) { Value = member.content });
-                */
-                
+                que = string.Format("INSERT INTO {0} (ID,name,tag,mainclass,subclass,note,jointime) VALUES (:id,:author,:tag,:main,:sub,:note,'{1}');", tablename, DateTime.Now.ToString());
+
+
                 parm.Add(new NpgsqlParameter("id", NpgsqlDbType.Integer));
                 parm.Add(new NpgsqlParameter("author", NpgsqlDbType.Text));
                 parm.Add(new NpgsqlParameter("main", NpgsqlDbType.Integer));
                 parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer));
                 parm.Add(new NpgsqlParameter("note", NpgsqlDbType.Text));
+                parm.Add(new NpgsqlParameter("tag", NpgsqlDbType.Text));
 
                 parm[0].Value = id;
                 parm[1].Value = member.Author;
                 parm[2].Value = (int)member.mainClass;
                 parm[3].Value = (int)member.subClass;
                 parm[4].Value = member.content;
+
+                if (member is DiscordJoinArg)
+                {
+                    DiscordJoinArg disc = member as DiscordJoinArg;
+                    parm[5].Value = disc.discordID;
+                }
+                else
+                {
+                    parm[5].Value = "";
+                }
 
                 id++;
 

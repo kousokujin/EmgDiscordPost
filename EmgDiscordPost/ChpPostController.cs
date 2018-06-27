@@ -11,21 +11,35 @@ namespace EmgDiscordPost
         public DateTime notifyTime;  //覇者の紋章の通知時刻
         bool EventLoop;
 
-        public event EventHandler notificationChpTime;  //覇者の紋章の通知の次官になった時のイベント
+        public event EventHandler notificationChpTime;  //覇者の紋章の通知の時間になった時のイベント
+        public event EventHandler orderEvent;   //覇者の紋章の問い合わせが来た時
+
+        Task loop;
 
         //覇者の紋章だけどIemgPostを流用
         public ChpPostController(IemgPost service, DateTime initNotifyTime) : base(service)
         {
             this.chpService = service;
             notifyTime = initNotifyTime;
-
             EventLoop = false;
+
+            chpService.OrderEmg += orderRecieve;
+
+            loop = StartLoop();
         }
 
         //覇者の紋章をPOST
-        public async Task PostChp(List<string> chpList)
+        public async Task PostChp(List<string> chpList,string replay ="")
         {
-            string postStr = "今週の覇者の紋章キャンペーンは以下の通りです\n";
+            string postStr;
+            if (replay == "")
+            {
+                postStr = "今週の覇者の紋章キャンペーンは以下の通りです\n";
+            }
+            else
+            {
+                postStr = "@"+replay+" 今週の覇者の紋章キャンペーンは以下の通りです\n";
+            }
 
             int count = 0;
 
@@ -62,6 +76,12 @@ namespace EmgDiscordPost
             }
 
             return isOutput;
+        }
+
+        //オーダーが来たとき
+        private void orderRecieve(object sender,EventArgs e)
+        {
+            orderEvent?.Invoke(sender, e);
         }
 
         private void Loop() //イベントループ

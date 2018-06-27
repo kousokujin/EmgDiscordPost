@@ -46,6 +46,7 @@ namespace EmgDiscordPost
         */
         List<DateTime> getNotifyTime();
         void addChpTable(int week, int hour, int min, int sec);
+        void createtable();
     }
 
     //参加メンバーを管理するデータベースについて

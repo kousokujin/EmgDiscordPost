@@ -20,6 +20,12 @@ namespace EmgDiscordPost
             this.DB.setTable("PSO2ChpTable");
         }
 
+        public void initDB()
+        {
+            chpConf.droptable();
+            chpConf.createtable();
+        }
+
         public void addTime(int week,int hour,int min,int sec)
         {
             chpConf.addChpTable(week, hour, min,sec);
@@ -41,6 +47,11 @@ namespace EmgDiscordPost
             }
 
             return notify;
+        }
+
+        public List<string> getChpList()
+        {
+            return DB.getChpList();
         }
     }
 }
