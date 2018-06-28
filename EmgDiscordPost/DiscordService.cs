@@ -80,7 +80,7 @@ namespace EmgDiscordPost
                     if (isRep == true)
                     {
                         //RunReplayEvent(this, new ReceiveData(arg.Author.ToString(), mes));
-                        RunReplayEvent(this, new DiscordReceive(arg));
+                        RunReplayEvent(this, new DiscordReceive(arg,mes));
                     }
                     else
                     {
@@ -156,6 +156,11 @@ namespace EmgDiscordPost
         public SocketMessage message;
 
         public DiscordReceive(SocketMessage mes) : base(mes.Author.Id.ToString(), mes.Content)
+        {
+            this.message = mes;
+        }
+
+        public DiscordReceive(SocketMessage mes, string content) : base(mes.Author.Id.ToString(), content)
         {
             this.message = mes;
         }

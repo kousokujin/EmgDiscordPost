@@ -70,9 +70,11 @@ namespace EmgDiscordPost
         private async void TomorrowEmgOrder(object sender,EventArgs e)
         {
             (string value, bool isExist) = DBconfig.getValue("Lodos");
-            List<EventData> lst = DBget.getListEvent(DateTime.Now);
+            List<EventData> lst = DBget.getListEvent(DateTime.Now + new TimeSpan(1,0,0,0));
 
             await post.postListEmg(lst, DateTime.Now + new TimeSpan(1,0,0,0), false);
+
+            DBconfig.updateValue("Lodos", "true");
         }
 
         //バル・ロドスの日がおわる30分前

@@ -65,6 +65,7 @@ namespace EmgDiscordPost
     //データベースから設定を読み込むインターフェイス
     interface IDBConfig : IDBLoader
     {
+        void createtable();
         void updateValue(string item, string value);
         (string value, bool isExist) getValue(string item);
     }

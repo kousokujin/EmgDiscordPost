@@ -18,10 +18,22 @@ namespace EmgDiscordPost
             command(que);
         }
 
-        public void updateValue(string item,string value)
+        public void updateValue(string item, string value)
         {
             //なぞ
-            string que = string.Format("UPDATE {0} SET value = {1} WHERE item = {2}; INSERT INTO {0} (item,value) SELECT {1},{2} WHERE NOT EXISTS (SELECT item FROM {0} WHERE item = {2});", tablename, value, item);
+            //string que = string.Format("UPDATE {0} SET value = {1} WHERE item = {2}; INSERT INTO {0} (item,value) SELECT {1},{2} WHERE NOT EXISTS (SELECT item FROM {0} WHERE item = {2});", tablename, value, item);
+            (string tempval, bool isExist) = getValue(item);
+
+            string que = "";
+            if (isExist)
+            {
+                que = string.Format("UPDATE {0} SET value = {1} WHERE item = '{2}';", tablename, value, item);
+            }
+            else
+            {
+                que = string.Format("INSERT INTO {0} (item,value) VALUES ( '{1}','{2}' );", tablename, item, value);
+            }
+
             command(que);
             logOutput.writeLog("設定を更新しました。");
         }
@@ -29,7 +41,7 @@ namespace EmgDiscordPost
         //設定データの取り出し
         public (string value,bool isExist) getValue(string item)
         {
-            string que = string.Format("SELECT item,value FROM {0} WHERE item={1}", tablename, item);
+            string que = string.Format("SELECT item,value FROM {0} WHERE item='{1}'", tablename, item);
             List<List<object>> lst = selectQue(que);
 
             if(lst.Count == 0)

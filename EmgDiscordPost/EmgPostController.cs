@@ -84,7 +84,7 @@ namespace EmgDiscordPost
             {
                 if (e is emgQuest)
                 {
-                    postStr += e.eventName;
+                    postStr +=　string.Format("{0} {1}",e.eventTime.ToString("HH:mm"),e.eventName);
                 }
                 count++;
 
