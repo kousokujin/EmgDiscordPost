@@ -8,9 +8,11 @@ namespace EmgDiscordPost
     interface IPostService
     {
         void postStr(string content);
+        void sendReplay(string content, User user);
         void connect();
         void disconnect();
         Task PostAsync(string content);
+        Task ReplayAsync(string content, User user);
     }
 
     interface IemgPost : IPostService

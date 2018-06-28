@@ -63,9 +63,9 @@ namespace EmgDiscordPost
         //Discordにリプライがきたときのイベント
         private void replayEventProcess(object sender, EventArgs e)
         {
-            if (e is ReceiveData)
+            if (e is DiscordReceive)
             {
-                ReceiveData data = e as ReceiveData;
+                 DiscordReceive data = e as DiscordReceive;
 
                 foreach(string s in cancelword) //キャンセルが出た時
                 {
@@ -82,7 +82,7 @@ namespace EmgDiscordPost
                     if(s == data.content)
                     {
                         //参加クラス未定で参加
-                        joinArg join = new DiscordJoinArg(data.Author, "", JobClass.None, JobClass.None);
+                        DiscordJoinArg join = new DiscordJoinArg(data.message, JobClass.None, JobClass.None);
                         joinEvent(this, join);
                         return;
                     }
@@ -102,77 +102,73 @@ namespace EmgDiscordPost
 
                 if((mainclass != JobClass.None && subClass != JobClass.None)||(mainclass == JobClass.Hr)) //メインクラスもサブクラスも定義されてる場合
                 {
-                    joinArg join = new DiscordJoinArg(data.Author, note, mainclass, subClass);
+                    DiscordJoinArg join = new DiscordJoinArg(data.message, mainclass, subClass);
                     joinEvent(this, join);
                     return;
                 }
 
                 //なにもない場合にはリプライイベント
                 replayEvent?.Invoke(this, data);
-
-                /*
-                if (splitedStr[0].Length >= 2)
-                {
-                    string classStr = splitedStr[0].ToLower();
-                    char[] mainClassChr = { classStr[0], classStr[1] }; //メインクラス文字列
-                    string mainClassStr = new string(mainClassChr);
-
-                    JobClass mainclass = convertJobclass(mainClassStr);
-                    
-                    if(mainclass == JobClass.Hr)    //ヒーローの場合
-                    {
-                        join = new joinArg(data.Author, note, mainclass, JobClass.None);
-                        joinEvent(this, join);
-                        return;
-                    }
-
-                    if(mainclass == JobClass.None)  //何も割り当てられなかった場合
-                    {
-                        //リプライとしてイベントを実行
-                        ReceiveData rd = new ReceiveData(data.Author, data.content);
-                        replayEvent(this, rd);
-                        return;
-                    }
-
-                    if (splitedStr[0].Length == 4) //サブクラス割当
-                    {
-                        char[] subClassChr = { classStr[2], classStr[3] }; //サブクラス文字列
-                        string subClassStr = new string(subClassChr);
-
-                        JobClass subclass = convertJobclass(subClassStr);
-
-                        if(subclass == JobClass.Hr || subclass == JobClass.None)    //サブクラスがヒーロまたは割当なしの場合は割当なしでエントリー
-                        {
-                            //リプライとしてイベントを実行
-                            ReceiveData rd = new ReceiveData(data.Author, data.content);
-                            replayEvent(this, rd);
-                            return;
-                        }
-
-                        join = new joinArg(data.Author, note, mainclass, subclass);
-                        joinEvent(this, join);
-                        return;
-                    }
-
-
-                }
-                */
             }
         }
     }
 
-    class joinArg : ReceiveData
+    
+    interface IjoinArg
+    {
+        JobClass getMainclass();
+        JobClass getSubclass();
+        string getName();
+        string getNote();
+    }
+
+    class DiscordJoinArg : DiscordReceive,IjoinArg
     {
         public JobClass mainClass;
         public JobClass subClass;
 
-        public joinArg(string author,string content,JobClass mainClass,JobClass subClass) : base(author,content)
+        public DiscordJoinArg(SocketMessage message, JobClass mainClass, JobClass subClass) : base(message)
         {
             this.mainClass = mainClass;
             this.subClass = subClass;
-        }  
+        }
+        
+        public JobClass getMainclass()
+        {
+            return mainClass;
+        }
+
+        public JobClass getSubclass()
+        {
+            return subClass;
+        }
+
+        public string getName()
+        {
+            (string name, string id) = separate();
+            return name;
+        }
+
+        public string getID()
+        {
+            (string name, string id) = separate();
+            return id;
+        }
+
+        public string getNote()
+        {
+            return content;
+        }
+
+        private (string name,string id) separate()
+        {
+            string[] separate = message.Author.ToString().Split('#');
+
+            return (separate[0], separate[1]);
+        }
     }
 
+    /*
     class DiscordJoinArg : joinArg
     {
         public string discordID;
@@ -184,6 +180,7 @@ namespace EmgDiscordPost
             discordID = separate[1];
         }
     }
+    */
 
     //PSO2職業列挙型
     enum JobClass

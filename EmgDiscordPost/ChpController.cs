@@ -10,14 +10,15 @@ namespace EmgDiscordPost
         chpDB DBcontroller;
         ChpPostController chpController;
 
-        public ChpController(ChpPostController DB, ChpPostController post)
+        public ChpController(chpDB DB, ChpPostController post)
         {
-            this.chpController = DB;
+            this.DBcontroller = DB;
             this.chpController = post;
             initOrderword();
             chpController.notifyTime = DBcontroller.nextNotifyTime();
 
             chpController.notificationChpTime += chpTimeEvent;
+            chpController.orderEvent += orderRes;
         }
 
         public void initOrderword()
@@ -47,9 +48,10 @@ namespace EmgDiscordPost
         {
             if(e is ReceiveData)
             {
-                ReceiveData d = e as ReceiveData;
+                ReceiveData data = e as ReceiveData;
+                User u = new User(data.Author);
                 List<string> chpList = DBcontroller.getChpList();
-                await chpController.PostChp(chpList, d.Author);
+                await chpController.ReplayChp(chpList, u);
             }
         }
     }

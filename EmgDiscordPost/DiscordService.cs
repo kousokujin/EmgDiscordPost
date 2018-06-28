@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using Discord.WebSocket;
+using Discord.Commands;
 using Discord;
 using System.Threading.Tasks;
 //using System.Text.RegularExpressions;
@@ -23,7 +24,7 @@ namespace EmgDiscordPost
         //リプライを受信した時
         //public event EventHandler ReceiveReplay;
 
-        public DiscordService(string token,ulong channelID,string botname)
+        public DiscordService(string token, ulong channelID, string botname)
         {
             this.token = token;
             this.channelID = channelID;
@@ -44,7 +45,13 @@ namespace EmgDiscordPost
         public override void connect()
         {
             Task conection = StartClient();
-            conection.Wait();
+            try
+            {
+                conection.Wait();
+            }catch(System.AggregateException e)
+            {
+                logOutput.writeLog(e.Message);
+            }
             logOutput.writeLog("Discordに接続しました");
         }
 
@@ -72,11 +79,13 @@ namespace EmgDiscordPost
 
                     if (isRep == true)
                     {
-                        RunReplayEvent(this, new ReceiveData(arg.Author.ToString(), mes));
+                        //RunReplayEvent(this, new ReceiveData(arg.Author.ToString(), mes));
+                        RunReplayEvent(this, new DiscordReceive(arg));
                     }
                     else
                     {
-                        RunReceiveEvent(this, new ReceiveData(arg.Author.ToString(), arg.Content));
+                        //RunReceiveEvent(this, new ReceiveData(arg.Author.ToString(), arg.Content));
+                        RunReceiveEvent(this, new DiscordReceive(arg));
                     }
                 }
             });
@@ -86,52 +95,78 @@ namespace EmgDiscordPost
 
         public override void postStr(string content)
         {
-            if(content == "")
+            if (content == "")
             {
                 return;
             }
-
             SocketTextChannel st = client.GetChannel(channelID) as SocketTextChannel;
             Task t = st.SendMessageAsync(content);
             logOutput.writeLog("Discordへ投稿「{0}」", content);
             t.Wait();
         }
 
-        protected override (bool,string) isReplay(string mes)
+        public override void sendReplay(string content, User username)
+        {
+            if (content == "")
+            {
+                return; //なにもしない
+            }
+
+            if (username is User)
+            {
+                string UserStr = string.Format("@{0}", username.username);
+                postStr(string.Format("{0} {1}", UserStr, content));
+
+                return;
+            }
+
+            DiscordUser disUser = username as DiscordUser;
+
+            if(!(disUser.user is SocketGuildUser))
+            {
+                return;
+            }
+
+            SocketGuildUser guilduser = disUser.user as SocketGuildUser;
+            string userStr = string.Format("@<{0}>",guilduser.Id);
+            postStr(string.Format("{0} {1}", userStr, content));
+        }
+
+        protected override (bool, string) isReplay(string mes)
         {
             ulong myID = client.CurrentUser.Id;
-            string myIDstr = string.Format("<@{0}> ",myID);
+            string myIDstr = string.Format("<@{0}> ", myID);
 
             bool isRep = mes.Contains(myIDstr);
 
             if (!isRep)
             {
-                return (isRep,mes);
+                return (isRep, mes);
             }
 
-            string replace = mes.Replace(myIDstr,"");
+            string replace = mes.Replace(myIDstr, "");
 
             return (isRep, replace);
         }
     }
 
-    /*
-    class ReceiveData : EventArgs
+    class DiscordReceive : ReceiveData
     {
         public SocketMessage message;
-        public string content;
 
-        public ReceiveData(SocketMessage mes)
+        public DiscordReceive(SocketMessage mes) : base(mes.Author.Id.ToString(), mes.Content)
         {
             this.message = mes;
-            this.content = mes.Content;
-        }
-
-        public ReceiveData(SocketMessage mes,string content)
-        {
-            this.message = mes;
-            this.content = content;
         }
     }
-    */
+
+    class DiscordUser : User
+    {
+        public SocketUser user;
+
+        public DiscordUser(SocketUser user) : base(user.ToString())
+        {
+            this.user = user;    
+        }
+    }
 }

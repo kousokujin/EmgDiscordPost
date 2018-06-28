@@ -22,7 +22,7 @@ namespace EmgDiscordPost
 
         //0:メンバー追加
         //1:追加時間外
-        public int addMember(joinArg member)
+        public int addMember(IjoinArg member)
         {
             List<EventData> ev = emg.getEmgList(DateTime.Now, DateTime.Now + new TimeSpan(0, 30, 0));
             bool isEmgEnable = false;
@@ -51,7 +51,7 @@ namespace EmgDiscordPost
             joindatabase.deleteMember(name);
         }
 
-        public List<joinArg> getMember()
+        public List<IjoinArg> getMember()
         {
             return joindatabase.getMemberList();
         }

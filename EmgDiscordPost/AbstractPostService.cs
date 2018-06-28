@@ -18,6 +18,9 @@ namespace EmgDiscordPost
         //サービスに文字列を投稿する
         abstract public void postStr(string content);
 
+        //ユーザーに返信
+        abstract public void sendReplay(string content, User username);
+
         abstract public void connect();
         abstract public void disconnect();
         abstract protected (bool, string) isReplay(string message);
@@ -27,6 +30,14 @@ namespace EmgDiscordPost
             await Task.Run(() =>
             {
                 postStr(content);
+            });
+        }
+
+        virtual public async Task ReplayAsync(string content,User user)
+        {
+            await Task.Run(() =>
+            {
+                sendReplay(content, user);
             });
         }
 
@@ -54,6 +65,16 @@ namespace EmgDiscordPost
         {
             this.content = mes;
             this.Author = Author;
+        }
+    }
+
+    class User
+    {
+        public string username;
+
+        public User(string Username)
+        {
+            this.username = Username;
         }
     }
 }

@@ -38,6 +38,12 @@ namespace EmgDiscordPost
 
             List<DateTime> lstTime = chpConf.getNotifyTime();
 
+            if(lstTime.Count == 0)
+            {
+                logOutput.writeLog("覇者の紋章の通知時刻がデータベースにありません。");
+                return DateTime.Now + ts;   //1年後の通知
+            }
+
             foreach(DateTime d in lstTime)
             {
                 if((d - DateTime.Now) < ts)

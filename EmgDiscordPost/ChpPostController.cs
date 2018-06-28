@@ -17,10 +17,10 @@ namespace EmgDiscordPost
         Task loop;
 
         //覇者の紋章だけどIemgPostを流用
-        public ChpPostController(IemgPost service, DateTime initNotifyTime) : base(service)
+        public ChpPostController(IemgPost service) : base(service)
         {
             this.chpService = service;
-            notifyTime = initNotifyTime;
+            notifyTime = new DateTime();
             EventLoop = false;
 
             chpService.OrderEmg += orderRecieve;
@@ -29,33 +29,38 @@ namespace EmgDiscordPost
         }
 
         //覇者の紋章をPOST
-        public async Task PostChp(List<string> chpList,string replay ="")
+        public async Task PostChp(List<string> chpList)
         {
-            string postStr;
-            if (replay == "")
-            {
-                postStr = "今週の覇者の紋章キャンペーンは以下の通りです\n";
-            }
-            else
-            {
-                postStr = "@"+replay+" 今週の覇者の紋章キャンペーンは以下の通りです\n";
-            }
+            string postStr = generateListChpStr(chpList);
+            await chpService.PostAsync(postStr);
+        }
+
+        //覇者の紋章のリプライ
+        public async Task ReplayChp(List<string> chpList,User u)
+        {
+            string postStr = generateListChpStr(chpList);
+            await chpService.ReplayAsync(postStr, u);
+            //await 
+        }
+
+        private string generateListChpStr(List<string> chpList)
+        {
+            string Str = "今週の覇者の紋章キャンペーンは以下の通りです\n";
 
             int count = 0;
 
             foreach (string s in chpList)
             {
-                postStr += s;
+                Str += s;
                 count++;
 
                 if (count != chpList.Count)
                 {
-                    postStr += '\n';
+                    Str += '\n';
                 }
-
-                await chpService.PostAsync(postStr);
             }
 
+            return Str;
         }
 
         public override void addWord(string word)

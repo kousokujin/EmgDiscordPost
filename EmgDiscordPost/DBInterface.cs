@@ -57,9 +57,9 @@ namespace EmgDiscordPost
         void droptable();
         */
         void createtable();
-        bool addMember(joinArg member);
+        bool addMember(IjoinArg member);
         void deleteMember(string name);
-        List<joinArg> getMemberList();
+        List<IjoinArg> getMemberList();
     }
 
     //データベースから設定を読み込むインターフェイス

@@ -49,7 +49,7 @@ namespace EmgDiscordPost
         }
 
         //戻り値はUPDATEかどうか
-        public bool addMember(joinArg member)
+        public bool addMember(IjoinArg member)
         {
             (int key, bool memberd) = isMemberd(member);
             List<NpgsqlParameter> parm = new List<NpgsqlParameter>();
@@ -68,15 +68,15 @@ namespace EmgDiscordPost
                 parm.Add(new NpgsqlParameter("tag", NpgsqlDbType.Text));
 
                 parm[0].Value = id;
-                parm[1].Value = member.Author;
-                parm[2].Value = (int)member.mainClass;
-                parm[3].Value = (int)member.subClass;
-                parm[4].Value = member.content;
+                parm[1].Value = member.getName();
+                parm[2].Value = (int)member.getMainclass();
+                parm[3].Value = (int)member.getSubclass();
+                parm[4].Value = member.getName();
 
                 if (member is DiscordJoinArg)
                 {
                     DiscordJoinArg disc = member as DiscordJoinArg;
-                    parm[5].Value = disc.discordID;
+                    parm[5].Value = disc.getID();
                 }
                 else
                 {
@@ -85,12 +85,12 @@ namespace EmgDiscordPost
 
                 id++;
 
-                logOutput.writeLog("{0}が参加しました。", member.Author);
+                logOutput.writeLog("{0}が参加しました。", member.getName());
             }
             else
             {
 
-                if (member.content != "")   //備考の更新がないとき
+                if (member.getNote() != "")   //備考の更新がないとき
                 {
                     /*
                     que = string.Format("UPDATE {0} SET mainclass = {1},subclass = {2} WHERE id = {3};",
@@ -113,8 +113,8 @@ namespace EmgDiscordPost
                     parm.Add(new NpgsqlParameter("sub", NpgsqlDbType.Integer));
 
                     parm[0].Value = key;
-                    parm[1].Value = (int)member.mainClass;
-                    parm[2].Value = (int)member.subClass;
+                    parm[1].Value = (int)member.getMainclass();
+                    parm[2].Value = (int)member.getSubclass();
 
 
                 }
@@ -142,13 +142,13 @@ namespace EmgDiscordPost
                     parm.Add(new NpgsqlParameter("note", NpgsqlDbType.Text));
 
                     parm[0].Value = key;
-                    parm[1].Value = (int)member.mainClass;
-                    parm[2].Value = (int)member.subClass;
-                    parm[3].Value = member.content;
+                    parm[1].Value = (int)member.getMainclass();
+                    parm[2].Value = (int)member.getSubclass();
+                    parm[3].Value = member.getNote();
 
                 }
 
-                logOutput.writeLog("{0}を変更しました。",member.Author);
+                logOutput.writeLog("{0}を変更しました。",member.getName());
             }
 
             //command(que);
@@ -181,11 +181,11 @@ namespace EmgDiscordPost
         }
 
         //メンバー一覧を取得
-        public List<joinArg> getMemberList()
+        public List<IjoinArg> getMemberList()
         {
             string que = string.Format("SELECT name,mainclass,subclass,note FROM {0} ;", tablename);
             List<List<object>> res = selectQue(que);
-            List<joinArg> outList = new List<joinArg>();
+            List<IjoinArg> outList = new List<IjoinArg>();
 
             foreach(List<object> lstObj in res)
             {
@@ -194,20 +194,20 @@ namespace EmgDiscordPost
                 JobClass subClass = (JobClass)((int)lstObj[2]);
                 string note = (string)lstObj[3];
 
-                joinArg tmp = new joinArg(name, note, mainclass, subClass);
+                IjoinArg tmp = new joinMember(mainclass, subClass, name, note);
                 outList.Add(tmp);
             }
 
             return outList;
         }
 
-        private (int key, bool membered) isMemberd(joinArg member)
+        private (int key, bool membered) isMemberd(IjoinArg member)
         {
             string QueStr = string.Format("SELECT ID,name FROM {0} WHERE name = :name;", tablename);
             List<object> para = new List<object>();
             //para.Add(new NpgsqlParameter("name", DbType.String) { Value = member.Author });
             NpgsqlParameter p = new NpgsqlParameter("name", NpgsqlDbType.Text);
-            p.Value = member.Author;
+            p.Value = member.getName();
             para.Add(p);
             
 
@@ -232,7 +232,7 @@ namespace EmgDiscordPost
                         int NulltempID = (int)obj;
                     }
 
-                    if(tempMember == member.Author)
+                    if(tempMember == member.getName())
                     {
                         id = tempID;
                         isMember = true;
@@ -241,6 +241,42 @@ namespace EmgDiscordPost
             }
 
             return (id, isMember);
+        }
+    }
+
+    class joinMember : IjoinArg
+    {
+        string name;
+        string note;
+        JobClass mainclass;
+        JobClass subclass;
+
+        public joinMember(JobClass mainclass, JobClass subclass,string author, string note = "")
+        {
+            this.name = author;
+            this.note = note;
+            this.mainclass = mainclass;
+            this.subclass = subclass;
+        }
+
+        public JobClass getMainclass()
+        {
+            return mainclass;
+        }
+
+        public JobClass getSubclass()
+        {
+            return subclass;
+        }
+
+        public string getName()
+        {
+            return name;
+        }
+
+        public string getNote()
+        {
+            return note;
         }
     }
 }

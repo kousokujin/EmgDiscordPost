@@ -8,26 +8,24 @@ namespace EmgDiscordPost
         static void Main(string[] args)
         {
             //テストコード
-            /*
+            
             string address = "2400:2410:d0e1:6500:f7d3:f0cb:14b4:5dac";
             string user = "docker";
             string pass = "docker";
             string database = "docker";
-
-            IJoinMemberDB db = new PostgreSQL_joinDB(address, database, user, pass);
-            joinArg arg = new joinArg("kousokujin", "test", JobClass.Bo, JobClass.Hu);
-            db.droptable();
-            db.createtable();
-            db.addMember(arg);
-            arg = new joinArg("kousokujin", "", JobClass.Fo, JobClass.Te);
-            db.addMember(arg);
-            */
-
+            
             Console.Write("Token:");
             string token = Console.ReadLine();
-            ulong id = 0000000000000;
-            joinPostDiscord ser = new joinPostDiscord(token, id, "testApplication");
-            ser.joinEvent += joinEv;
+            ulong id = 000000000;
+
+            IChpDataRead chpData = new PostgreSQL_ChpRead(address, database, user, pass);
+            IChpTimeDB timeData = new PostgreSQL_chp_confDB(address, database, user, pass);
+            chpDB chpDBcon = new chpDB(chpData, timeData);
+
+            IemgPost post = new emgPostToDiscord(token, id, "testApplication");
+            ChpPostController postCon = new ChpPostController(post);
+
+            ChpController chp = new ChpController(chpDBcon, postCon);
 
             Console.ReadLine();
         }
@@ -47,14 +45,6 @@ namespace EmgDiscordPost
             {
                 ReceiveData d = data as ReceiveData;
                 Console.WriteLine("リプライ:{0}", d.content);
-            }
-        }
-
-        static void joinEv(object sender, EventArgs data) {
-            if(data is joinArg)
-            {
-                joinArg j = data as joinArg;
-                Console.WriteLine("From:{0} Class:{1}{2} note{3}",j.Author,j.mainClass,j.subClass,j.content);
             }
         }
 
