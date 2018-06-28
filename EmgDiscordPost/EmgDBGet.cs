@@ -20,6 +20,7 @@ namespace EmgDiscordPost
         }
 
         //timeで指定した時刻から一番近い緊急クエストを返す
+        //現状は緊急クエストのみ
         public EventData getNextEvent(DateTime time)
         {
             DateTime end = time + new TimeSpan(2, 0, 0, 0); //timeから2日後くらいまで
@@ -34,7 +35,7 @@ namespace EmgDiscordPost
 
             foreach(EventData d in lst)
             {
-                if(next.eventTime > d.eventTime)
+                if((next.eventTime > d.eventTime) && d is emgQuest)
                 {
                     next = d;
                 }

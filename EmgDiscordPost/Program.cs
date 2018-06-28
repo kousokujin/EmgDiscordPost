@@ -16,7 +16,7 @@ namespace EmgDiscordPost
             
             Console.Write("Token:");
             string token = Console.ReadLine();
-            ulong id = 000000000;
+            ulong id = 348314786959720470;
 
             IChpDataRead chpData = new PostgreSQL_ChpRead(address, database, user, pass);
             IChpTimeDB timeData = new PostgreSQL_chp_confDB(address, database, user, pass);
@@ -26,6 +26,10 @@ namespace EmgDiscordPost
             ChpPostController postCon = new ChpPostController(post);
 
             ChpController chp = new ChpController(chpDBcon, postCon);
+            chp.initDB();
+            DateTime notify = DateTime.Now + new TimeSpan(0, 0, 30);
+            timeData.addChpTable((int)notify.DayOfWeek, notify.Hour, notify.Minute, notify.Second);
+            chp.reloadNotifyTime();
 
             Console.ReadLine();
         }

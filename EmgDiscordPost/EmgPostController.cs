@@ -10,7 +10,7 @@ namespace EmgDiscordPost
         IemgPost emgService;
 
         //イベント
-        public event EventHandler notificationTime; //60,30,0の通知時刻になった時
+        public event EventHandler notificationTime; //60,30,0の通知時刻になった時(実際は30分毎)
         public event EventHandler todayEmgOrder; //今日の緊急クエストの問い合わせが来た時
         public event EventHandler tomorrowEmgOrder; //明日の緊急クエストの問い合わせが来た時
         public event EventHandler changeDay;    //日付が変わった時
@@ -46,12 +46,14 @@ namespace EmgDiscordPost
         }
 
         //リプライが来た時のフィルター
+        /*
         private bool evFill(string content)
         {
             string[] contentSprit = content.Replace("　", " ").Split(' '); //全角スペースを半角スペースに変換
             (JobClass mainclass, JobClass subclass) = myFunction.convertJobClass(contentSprit[0]);
             return (mainclass != JobClass.None && subclass != JobClass.None) || (mainclass == JobClass.Hr);
         }
+        */
 
         //緊急クエストが始まる時に使う
         public async Task postEmgTime(emgQuest emg,int interval)
@@ -62,7 +64,8 @@ namespace EmgDiscordPost
             }
             else
             {
-                await emgService.PostAsync(string.Format("【{0}分前】{1} {2}", interval, emg.eventTime.ToString("HH:mm"), emg.eventName));
+                string liveStr = myFunction.getLiveEmgStr(emg);
+                await emgService.PostAsync(string.Format("【{0}分前】{1} {2}", interval, emg.eventTime.ToString("HH:mm"), liveStr));
             }
         }
 
@@ -91,12 +94,19 @@ namespace EmgDiscordPost
                 }
             }
 
-            if (Lodos && LodosCalculator.calcRodosDay(DateTime.Now))
+            if (Lodos && LodosCalculator.calcRodosDay(time))
             {
                 postStr += '\n';
                 postStr += "本日はデイリーオーダー「バル・ロドス討伐(VH)」の日です。";
             }
 
+            await emgService.PostAsync(postStr);
+        }
+
+        public async Task LodosPost()
+        {
+            string postStr = string.Format("デイリーオーダー「バル・ロドス討伐(VH)」の日があと30分で終わります。\n オーダーは受注しましたか？次回のバル・ロドス討伐(VH)の日は{0}です。",
+                LodosCalculator.nextRodosDay(DateTime.Now + new TimeSpan(1, 0, 0, 0)));
             await emgService.PostAsync(postStr);
         }
 

@@ -73,7 +73,7 @@ namespace EmgDiscordPost
         {
             Task t = Task.Run(() =>
             {
-                if (!arg.Author.Username.Equals(bot_name))
+                if (!arg.Author.Username.Equals(bot_name) && arg.Channel.Id == channelID)
                 {
                     (bool isRep, string mes) = isReplay(arg.Content);
 
@@ -105,6 +105,7 @@ namespace EmgDiscordPost
             t.Wait();
         }
 
+        //なんかうまくいかないので使用禁止（postStr(string)を使う）
         public override void sendReplay(string content, User username)
         {
             if (content == "")

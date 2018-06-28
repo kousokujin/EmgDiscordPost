@@ -66,6 +66,7 @@ namespace EmgDiscordPost
     interface IDBConfig : IDBLoader
     {
         void updateValue(string item, string value);
+        (string value, bool isExist) getValue(string item);
     }
 
 

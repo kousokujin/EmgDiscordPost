@@ -91,13 +91,11 @@ namespace EmgDiscordPost
             }
         }
 
-        /*
         public override List<List<object>> selectQue(string que)
         {
             List<object> par = new List<object>();
             return selectParamQue(que, par);
         }
-        */
 
         public override List<List<object>> selectParamQue(string que,List<object> par)
         {

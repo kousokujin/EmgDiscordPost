@@ -31,6 +31,11 @@ namespace EmgDiscordPost
             DBcontroller.initDB();
         }
 
+        public void reloadNotifyTime()
+        {
+            chpController.notifyTime = DBcontroller.nextNotifyTime();
+        }
+
         //覇者の紋章の通知時刻になった時のイベント
         private async void chpTimeEvent(object sender,EventArgs e)
         {
@@ -39,13 +44,14 @@ namespace EmgDiscordPost
             await chpController.PostChp(chpList);
 
             //次の覇者の紋章通知時刻
-            await Task.Run(() => { chpController.notifyTime = DBcontroller.nextNotifyTime(); } );
+            await Task.Run(() => { reloadNotifyTime(); } );
 
         }
 
         //覇者の紋章の問い合わせが来た時
         private async void orderRes(object sender,EventArgs e)
         {
+            /*
             if(e is ReceiveData)
             {
                 ReceiveData data = e as ReceiveData;
@@ -53,6 +59,12 @@ namespace EmgDiscordPost
                 List<string> chpList = DBcontroller.getChpList();
                 await chpController.ReplayChp(chpList, u);
             }
+            */
+
+            //データベースから今週の覇者の紋章を取得
+            List<string> chpList = DBcontroller.getChpList();
+            await chpController.PostChp(chpList);
+            await Task.Run(() => { reloadNotifyTime(); });
         }
     }
 }
