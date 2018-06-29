@@ -24,8 +24,21 @@ namespace EmgDiscordPost
         public List<EventData> getEmgList(DateTime start,DateTime end)
         {
             List<EventData> outputData = new List<EventData>();
+            DateTime fixStart;
+            DateTime fixEnd;
 
-            string que = string.Format("SELECT id, emgname,livename,emgtime,emgtype FROM {0} WHERE emgtime >= '{1}' AND emgtime < '{2}' ORDER BY emgtime ASC;", tablename,start.ToString(),end.ToString());
+            if(start > end) //startのほうが遅い
+            {
+                fixStart = end;
+                fixEnd = start;
+            }
+            else
+            {
+                fixStart = start;
+                fixEnd = end;
+            }
+
+            string que = string.Format("SELECT id, emgname,livename,emgtime,emgtype FROM {0} WHERE emgtime >= '{1}' AND emgtime < '{2}' ORDER BY emgtime ASC;", tablename,fixStart.ToString(),fixEnd.ToString());
             List<List<object>> outtable = selectQue(que);
 
             foreach (List<object> o in outtable)

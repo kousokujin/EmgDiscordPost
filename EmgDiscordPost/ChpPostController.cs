@@ -20,6 +20,7 @@ namespace EmgDiscordPost
         public ChpPostController(IemgPost service) : base(service)
         {
             this.chpService = service;
+            this.service = service;
             notifyTime = new DateTime();
             EventLoop = false;
 

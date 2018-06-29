@@ -132,6 +132,23 @@ namespace EmgDiscordPost
 
         }
 
+        static public string ConvertJob(JobClass mainclass,JobClass subclass = JobClass.None)
+        {
+            string Str = "";
+
+            if(mainclass != JobClass.None)
+            {
+                Str += mainclass.ToString();
+            }
+
+            if(subclass != JobClass.None)
+            {
+                Str += subclass.ToString();
+            }
+
+            return Str;
+        }
+
         /*
         static public string generateEmgArrStr(List<EventData> evn)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace EmgDiscordPost
 {
@@ -18,6 +19,12 @@ namespace EmgDiscordPost
 
         //Discordのリプライで反応するかどうか
         public abstract bool isWord(string word);
+
+        //サービスに発言
+        public async Task AsyncPostService(string content)
+        {
+            await service.PostAsync(content);
+        }
 
     }
 }

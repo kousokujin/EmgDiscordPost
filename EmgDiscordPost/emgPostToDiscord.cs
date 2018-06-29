@@ -9,7 +9,7 @@ namespace EmgDiscordPost
 {
 
     //リプライが来た時のフィルター(trueでイベントを実行しない)
-    public delegate bool ReplayFillter(string content);
+    //public delegate bool ReplayFillter(string content);
 
     class emgPostToDiscord : DiscordService,IemgPost
     {

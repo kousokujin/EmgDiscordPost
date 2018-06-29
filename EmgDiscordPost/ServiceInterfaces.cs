@@ -43,8 +43,12 @@ namespace EmgDiscordPost
         //キャンセルが出た時
         event EventHandler cancelEvent;
 
+        //参加者の問い合わせが来た時
+        event EventHandler showMember;
+
         void addWord(string word);
         void addCancelword(string word);
+        void addListword(string word);
         List<string> getOrderwords();
     }
 }

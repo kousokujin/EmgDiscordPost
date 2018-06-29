@@ -12,12 +12,15 @@ namespace EmgDiscordPost
         public event EventHandler joinEvent;
         //キャンセルが出た時
         public event EventHandler cancelEvent;
+        //参加者の問い合わせが来たとき
+        public event EventHandler showMember;
 
         //リプライが来たとき
         public event EventHandler replayEvent;
 
         List<string> joinwords;
         List<string> cancelword;
+        List<string> listwords;
 
         public joinPostDiscord(string token,ulong id,string bot) : base(token, id, bot)
         {
@@ -41,6 +44,11 @@ namespace EmgDiscordPost
         public void addCancelword(string word)
         {
             cancelword.Add(word);
+        }
+
+        public void addListword(string word)
+        {
+            listwords.Add(word);
         }
 
         public List<string> getOrderwords()
@@ -75,6 +83,12 @@ namespace EmgDiscordPost
                         cancelEvent?.Invoke(this, data);
                         return;
                     }
+                }
+
+                foreach(string s in listwords)  //参加者の問い合わせが来た時
+                {
+                    showMember?.Invoke(this, data);
+                    return;
                 }
 
                 foreach (string s in joinwords)  //参加する場合

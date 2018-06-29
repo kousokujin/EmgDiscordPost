@@ -155,12 +155,12 @@ namespace EmgDiscordPost
     {
         public SocketMessage message;
 
-        public DiscordReceive(SocketMessage mes) : base(mes.Author.Id.ToString(), mes.Content)
+        public DiscordReceive(SocketMessage mes) : base(mes.Author.Username, mes.Content)
         {
             this.message = mes;
         }
 
-        public DiscordReceive(SocketMessage mes, string content) : base(mes.Author.Id.ToString(), content)
+        public DiscordReceive(SocketMessage mes, string content) : base(mes.Author.Username, content)
         {
             this.message = mes;
         }

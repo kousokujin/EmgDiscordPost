@@ -33,6 +33,7 @@ namespace EmgDiscordPost
         public EmgPostController(IemgPost service) : base(service)
         {
             this.emgService = service;
+            this.service = service;
             InitaddWords();
             setNextNotify();
             setNextDay();

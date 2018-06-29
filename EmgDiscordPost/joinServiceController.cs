@@ -12,12 +12,16 @@ namespace EmgDiscordPost
         public event EventHandler joinEvent;
         //キャンセルが出た時
         public event EventHandler cancelEvent;
+        //参加者問い合わせ
+        public event EventHandler showList;
 
         public joinServiceController(IjoinPost joinClient) : base(joinClient)
         {
             this.joinClient = joinClient;
+            this.service = joinClient;
             joinClient.joinEvent += joinEventProcess;
             joinClient.cancelEvent += cancelEventProcess;
+            joinClient.showMember += showMember;
 
             initaddWord();
         }
@@ -29,6 +33,8 @@ namespace EmgDiscordPost
             addWord("join");
             joinClient.addCancelword("キャンセル");
             joinClient.addCancelword("cancel");
+            joinClient.addListword("参加者");
+            joinClient.addListword("list");
         }
 
         public override void addWord(string word)
@@ -72,6 +78,10 @@ namespace EmgDiscordPost
             cancelEvent?.Invoke(sender, e);
         }
 
-
+        //参加者問い合わせ
+        private void showMember(object sender,EventArgs e)
+        {
+            showList?.Invoke(sender, e);
+        }
     }
 }
