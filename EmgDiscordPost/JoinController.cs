@@ -17,6 +17,8 @@ namespace EmgDiscordPost
             this.configDB = config;
 
             postService.joinEvent += joinEventFromService;
+            postService.showList += postMemberList;
+            postService.cancelEvent += cancelEventFromService;
         }
 
         //参加の申請が来た時
@@ -28,7 +30,7 @@ namespace EmgDiscordPost
                 int result = joinDatabase.addMember(join);
                 string postStr = "";
 
-                if(result == 0)
+                if(result == 0 || result == 1)
                 {
                     string jobStr = myFunction.ConvertJob(join.getMainclass(), join.getSubclass());
                     if(jobStr == "")
@@ -36,7 +38,14 @@ namespace EmgDiscordPost
                         jobStr += "クラス未定";
                     }
 
-                    postStr = string.Format("{0}が{1}でエントリーしました。",join.getName(),jobStr);
+                    if (result == 0)
+                    {
+                        postStr = string.Format("{0}が{1}でエントリーしました。", join.getName(), jobStr);
+                    }
+                    if(result == 1)
+                    {
+                        postStr = string.Format("{0}のエントリーを更新しました。", join.getName());
+                    }
                 }
                 else
                 {

@@ -202,9 +202,17 @@ namespace EmgDiscordPost
                             command.Parameters.Add(np);
                         }
                     }
-
-                    var result = command.ExecuteReader();
-                    return result;
+                    try
+                    {
+                        var result = command.ExecuteReader();
+                        return result;
+                    }
+                    catch (Npgsql.PostgresException)
+                    {
+                        logOutput.writeLog("SQLの実行に失敗しました。");
+                        return null;
+                    }
+                    //return result;
                 }
             }
             /*

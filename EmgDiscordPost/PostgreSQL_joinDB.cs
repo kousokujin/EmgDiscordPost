@@ -71,7 +71,7 @@ namespace EmgDiscordPost
                 parm[1].Value = member.getName();
                 parm[2].Value = (int)member.getMainclass();
                 parm[3].Value = (int)member.getSubclass();
-                parm[4].Value = member.getName();
+                parm[4].Value = member.getNote();
 
                 if (member is DiscordJoinArg)
                 {
@@ -90,7 +90,7 @@ namespace EmgDiscordPost
             else
             {
 
-                if (member.getNote() != "")   //備考の更新がないとき
+                if (member.getNote() == "")   //備考の更新がないとき
                 {
                     /*
                     que = string.Format("UPDATE {0} SET mainclass = {1},subclass = {2} WHERE id = {3};",

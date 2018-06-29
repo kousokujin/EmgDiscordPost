@@ -43,6 +43,14 @@ namespace EmgDiscordPost
             dbConfig.droptable();
             dbConfig.createtable();
 
+            //緊急クエストエントリー
+            IJoinMemberDB joinDatabase = new PostgreSQL_joinDB(address, database, user, pass);
+            IjoinPost joinDiscordCient = new joinPostDiscord(token, id, botname);
+            joinDB jDB = new joinDB(joinDatabase, emgDBread);
+            joinServiceController joinDiscord = new joinServiceController(joinDiscordCient);
+            jDB.initDB();
+            JoinController join = new JoinController(jDB, joinDiscord, dbConfig);
+
             Console.ReadLine();
         }
 

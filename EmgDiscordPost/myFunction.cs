@@ -149,46 +149,13 @@ namespace EmgDiscordPost
             return Str;
         }
 
-        /*
-        static public string generateEmgArrStr(List<EventData> evn)
+        //Discordでリプライが来た時に宛先部分を除去
+        static public string removedReplay(string content,string id)
         {
-            string output = "";
+            string myIDstr = string.Format("<@{0}> ", id);
+            string replace = content.Replace(myIDstr, "");
 
-            foreach (EventData e in evn)
-            {
-                if (e is emgQuest)
-                {
-                    string eventStr = getLiveEmgStr((emgQuest)e);
-                    output += string.Format("{0} {1}\n", e.eventTime.ToString("HH:mm"), eventStr);
-                }
-            }
-
-            return output;
+            return replace;
         }
-
-        static public string EmgArrStrNumbered(List<EventData> evn)
-        {
-            string output = "";
-            int number = 1;
-
-            foreach (EventData e in evn)
-            {
-                string eventStr = "";
-                if (e is emgQuest)
-                {
-                    eventStr = getLiveEmgStr((emgQuest)e);
-                }
-                else
-                {
-                    eventStr = e.eventName;
-                }
-
-                output += string.Format("[{0}] {1} {2}\n", number,e.eventTime.ToString("MM/dd HH:mm"), eventStr);
-                number++;
-            }
-
-            return output;
-        }
-        */
     }
 }

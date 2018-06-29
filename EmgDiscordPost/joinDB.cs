@@ -29,19 +29,21 @@ namespace EmgDiscordPost
         }
 
         //0:メンバー追加
-        //1:追加時間外
+        //1:メンバー更新
+        //2:追加時間外
         public int addMember(IjoinArg member)
         {
             bool isEmgEnable = isJoinable();
 
             if (isEmgEnable)
             {
-                joindatabase.addMember(member);
+                bool isMember = joindatabase.addMember(member);
+                if (isMember) return 1;
                 return 0;
             }
             else
             {
-                return 1;
+                return 2;
             }
         }
 

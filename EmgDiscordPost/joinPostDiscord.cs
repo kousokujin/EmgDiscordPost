@@ -27,6 +27,7 @@ namespace EmgDiscordPost
             ReceiveReplay += replayEventProcess;
             joinwords = new List<string>();
             cancelword = new List<string>();
+            listwords = new List<string>();
         }
 
         public joinPostDiscord(DiscordSocketClient client)  : base(client)
@@ -85,10 +86,13 @@ namespace EmgDiscordPost
                     }
                 }
 
-                foreach(string s in listwords)  //参加者の問い合わせが来た時
+                foreach (string s in listwords)  //参加者の問い合わせが来た時
                 {
-                    showMember?.Invoke(this, data);
-                    return;
+                    if (s == data.content)
+                    {
+                        showMember?.Invoke(this, data);
+                        return;
+                    }
                 }
 
                 foreach (string s in joinwords)  //参加する場合
@@ -96,7 +100,7 @@ namespace EmgDiscordPost
                     if(s == data.content)
                     {
                         //参加クラス未定で参加
-                        DiscordJoinArg join = new DiscordJoinArg(data.message, JobClass.None, JobClass.None);
+                        DiscordJoinArg join = new DiscordJoinArg(data.message, client.CurrentUser.Id,JobClass.None, JobClass.None);
                         joinEvent(this, join);
                         return;
                     }
@@ -116,7 +120,7 @@ namespace EmgDiscordPost
 
                 if((mainclass != JobClass.None && subClass != JobClass.None)||(mainclass == JobClass.Hr)) //メインクラスもサブクラスも定義されてる場合
                 {
-                    DiscordJoinArg join = new DiscordJoinArg(data.message, mainclass, subClass);
+                    DiscordJoinArg join = new DiscordJoinArg(data.message, client.CurrentUser.Id,mainclass, subClass,note);
                     joinEvent(this, join);
                     return;
                 }
@@ -141,10 +145,11 @@ namespace EmgDiscordPost
         public JobClass mainClass;
         public JobClass subClass;
 
-        public DiscordJoinArg(SocketMessage message, JobClass mainClass, JobClass subClass) : base(message)
+        public DiscordJoinArg(SocketMessage message,ulong id, JobClass mainClass, JobClass subClass,string note = "") : base(message,id)
         {
             this.mainClass = mainClass;
             this.subClass = subClass;
+            content = note;
         }
         
         public JobClass getMainclass()

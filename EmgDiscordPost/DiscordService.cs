@@ -80,12 +80,12 @@ namespace EmgDiscordPost
                     if (isRep == true)
                     {
                         //RunReplayEvent(this, new ReceiveData(arg.Author.ToString(), mes));
-                        RunReplayEvent(this, new DiscordReceive(arg,mes));
+                        RunReplayEvent(this, new DiscordReceive(arg,client.CurrentUser.Id));
                     }
                     else
                     {
                         //RunReceiveEvent(this, new ReceiveData(arg.Author.ToString(), arg.Content));
-                        RunReceiveEvent(this, new DiscordReceive(arg));
+                        RunReceiveEvent(this, new DiscordReceive(arg,client.CurrentUser.Id));
                     }
                 }
             });
@@ -155,15 +155,18 @@ namespace EmgDiscordPost
     {
         public SocketMessage message;
 
-        public DiscordReceive(SocketMessage mes) : base(mes.Author.Username, mes.Content)
+        public DiscordReceive(SocketMessage mes,ulong id) : base(mes.Author.Username, mes.Content)
         {
             this.message = mes;
+            content = myFunction.removedReplay(mes.Content,id.ToString());
         }
 
+        /*
         public DiscordReceive(SocketMessage mes, string content) : base(mes.Author.Username, content)
         {
             this.message = mes;
         }
+        */
     }
 
     class DiscordUser : User
