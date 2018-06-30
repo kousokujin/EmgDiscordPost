@@ -66,6 +66,11 @@ namespace EmgDiscordPost
                 output.Add(s);
             }
 
+            foreach(string s in listwords)
+            {
+                output.Add(s);
+            }
+
             return output;
         }
 

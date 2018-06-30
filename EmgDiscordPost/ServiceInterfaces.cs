@@ -13,6 +13,8 @@ namespace EmgDiscordPost
         void disconnect();
         Task PostAsync(string content);
         Task ReplayAsync(string content, User user);
+        event EventHandler ReceiveEvent;
+        event EventHandler ReceiveReplay;
     }
 
     interface IemgPost : IPostService

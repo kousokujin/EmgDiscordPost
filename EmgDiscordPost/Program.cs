@@ -51,6 +51,14 @@ namespace EmgDiscordPost
             jDB.initDB();
             JoinController join = new JoinController(jDB, joinDiscord, dbConfig);
 
+            //その他
+            IPostService discord = new DiscordService(token, id, botname);
+            List<AbstractServiceController> lstService = new List<AbstractServiceController>();
+            lstService.Add(postCon);
+            lstService.Add(emgPostCon);
+            lstService.Add(joinDiscord);
+            DefaultDiscordController defController = new DefaultDiscordController(discord, lstService);
+
             Console.ReadLine();
         }
 

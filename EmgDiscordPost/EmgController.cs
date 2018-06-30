@@ -24,6 +24,17 @@ namespace EmgDiscordPost
             post.MaintainTime += TodayEmgOrder;
             post.tomorrowEmgOrder += TomorrowEmgOrder;
             post.LodosNotify += endLodos;
+
+            InitaddWords();
+        }
+
+
+        //初期問い合わせのワードを追加
+        private void InitaddWords()
+        {
+            post.addWord("今日の緊急");
+            post.addWord("明日の緊急");
+            post.addWord("緊急");
         }
 
         //イベント

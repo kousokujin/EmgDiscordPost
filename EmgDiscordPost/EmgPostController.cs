@@ -34,7 +34,7 @@ namespace EmgDiscordPost
         {
             this.emgService = service;
             this.service = service;
-            InitaddWords();
+            //InitaddWords();
             setNextNotify();
             setNextDay();
             setLodosDay();
@@ -111,13 +111,6 @@ namespace EmgDiscordPost
             await emgService.PostAsync(postStr);
         }
 
-        //初期問い合わせのワードを追加
-        private void InitaddWords()
-        {
-            addWord("今日の緊急");
-            addWord("明日の緊急");
-        }
-
         override public void addWord(string word)
         {
             emgService.addOrderword(word);
@@ -181,6 +174,7 @@ namespace EmgDiscordPost
         private void setLodosDay()
         {
             DateTime nextLodos;
+            TimeSpan ts = new TimeSpan(23, 30, 0);
 
             if (LodosCalculator.calcRodosDay(DateTime.Now))
             {
@@ -198,7 +192,7 @@ namespace EmgDiscordPost
                 nextLodos = LodosCalculator.nextRodosDay(DateTime.Now);
             }
 
-            LodosDay = nextLodos;
+            LodosDay = (nextLodos + ts);
         }
 
         private void EventLoop()    //イベントループ
@@ -246,7 +240,7 @@ namespace EmgDiscordPost
             {
                 ReceiveData d = e as ReceiveData;
 
-                if (d.content == "今日の緊急")
+                if (d.content == "今日の緊急" || d.content == "緊急")
                 {
                     todayEmgOrder?.Invoke(sender, d);
                 }

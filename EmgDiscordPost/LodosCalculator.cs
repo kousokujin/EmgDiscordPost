@@ -43,8 +43,9 @@ namespace EmgDiscordPost
 
         static public DateTime nextRodosDay(DateTime dt)    //次のロドスの日
         {
+            DateTime dtFix = new DateTime(dt.Year, dt.Month, dt.Day);
             TimeSpan ts1 = new TimeSpan(24, 0, 0);
-            DateTime outDT = dt;
+            DateTime outDT = dtFix;
 
             while (!calcRodosDay(outDT))
             {

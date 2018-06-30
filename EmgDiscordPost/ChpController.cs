@@ -24,6 +24,7 @@ namespace EmgDiscordPost
         public void initOrderword()
         {
             chpController.addWord("覇者の紋章");
+            chpController.addWord("覇者");
         }
 
         public void initDB()
