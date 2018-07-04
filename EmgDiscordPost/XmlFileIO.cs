@@ -73,5 +73,10 @@ namespace EmgDiscordPost
 
             return true;
         }
+
+        public static bool isExist(string filename)
+        {
+            return File.Exists(filename);
+        }
     }
 }

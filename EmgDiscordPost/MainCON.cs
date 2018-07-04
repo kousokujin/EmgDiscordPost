@@ -50,6 +50,22 @@ namespace EmgDiscordPost
 
         public MainCON(string DBaddress, string database, string user, string password, string botname, ulong channelID, string token)
         {
+            init(DBaddress, database, user, password, botname, channelID, token);
+        }
+
+        public MainCON(Configration cof)
+        {
+            init(cof.DBaddress, cof.database, cof.user, cof.password, cof.botname, cof.channelID, cof.token);
+        }
+
+        public MainCON(string filename = "config/config.xml",string filetype = "XML")
+        {
+            Configration cof = new Configration(filename, filetype);
+            init(cof.DBaddress, cof.database, cof.user, cof.password, cof.botname, cof.channelID, cof.token);
+        }
+
+        public void init(string DBaddress, string database, string user, string password, string botname, ulong channelID, string token)
+        {
             this.DBaddress = DBaddress;
             this.database = database;
             this.user = user;
