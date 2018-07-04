@@ -82,12 +82,21 @@ namespace EmgDiscordPost
             this.password = cof.password;
 
             this.botname = cof.botname;
-            this.channelID = cof.channelID;
+            this.channelID = ulong.Parse(cof.channelID);
             this.token = cof.token;
+
+            bool enable = ulong.TryParse(cof.channelID, out this.channelID);
+            while (!enable)
+            {
+                Console.Write("ChannelID:");
+                string chStr = Console.ReadLine();
+                enable = ulong.TryParse(chStr, out this.channelID);
+            }
         }
 
         private void generateSetting()
         {
+            System.Threading.Thread.Sleep(1000);
             Console.WriteLine("Database Setting");
             Console.Write("Database Address:");
             DBaddress = Console.ReadLine();
@@ -98,7 +107,7 @@ namespace EmgDiscordPost
             Console.Write("Password:");
             password = Console.ReadLine();
 
-            Console.WriteLine("Discord Setting");
+            Console.Write("Discord Setting");
             Console.Write("Bot Name:");
             botname = Console.ReadLine();
             Console.Write("Bot Token:");
@@ -107,7 +116,7 @@ namespace EmgDiscordPost
             var isConvert = false;
             do
             {
-                Console.WriteLine("ChannelID:");
+                Console.Write("ChannelID:");
                 string tmpID = Console.ReadLine();
 
                 isConvert = ulong.TryParse(tmpID, out channelID);
@@ -135,7 +144,7 @@ namespace EmgDiscordPost
             cof.password = this.password;
 
             cof.botname = this.botname;
-            cof.channelID = this.channelID;
+            cof.channelID = this.channelID.ToString();
             cof.token = this.token;
 
             bool res = XmlFileIO.xmlSave(cof.GetType(), this.filename, cof);
@@ -212,7 +221,7 @@ namespace EmgDiscordPost
 
                 output.token = token;
                 output.botname = botname;
-                output.channelID = chID;
+                output.channelID = chID.ToString();
 
                 return (output, mig);
             }
@@ -246,7 +255,8 @@ namespace EmgDiscordPost
     }
 
     //ファイルに保存するクラス
-    class configClass
+    [Serializable]
+    public class configClass
     {
         //データベース関連
         public string DBaddress;
@@ -256,7 +266,7 @@ namespace EmgDiscordPost
 
         //Discord情報
         public string botname;
-        public ulong channelID;
+        public string channelID;
         public string token;
     }
 }
