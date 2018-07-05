@@ -136,7 +136,7 @@ namespace EmgDiscordPost
             DateTime now = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, DateTime.Now.Hour, 0, 0);
             TimeSpan ts30 = new TimeSpan(0, 30, 0);
 
-            if(DateTime.Now.Minute > 30)
+            if(DateTime.Now.Minute >= 30)
             {
                 now += ts30;
             }

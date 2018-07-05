@@ -38,15 +38,18 @@ namespace EmgDiscordPost
                 fixEnd = end;
             }
 
-            string que = string.Format("SELECT id, emgname,livename,emgtime,emgtype FROM {0} WHERE emgtime >= '{1}' AND emgtime < '{2}' ORDER BY emgtime ASC;", tablename,fixStart.ToString(),fixEnd.ToString());
+            string que = string.Format("SELECT id, emgname,livename,emgtime,emgtype FROM {0} WHERE emgtime >= '{1}' AND emgtime <= '{2}' ORDER BY emgtime ASC;", tablename,fixStart.ToString(),fixEnd.ToString());
             List<List<object>> outtable = selectQue(que);
 
+            int count = 0;
             foreach (List<object> o in outtable)
             {
                 int? Ntype = o[4] as int?;
+                
                 string emgname = o[1] as string;
                 string livename = o[2] as string;
                 DateTime? Ntime = o[3] as DateTime?;
+                count++;
 
                 //nullチェック
                 if(Ntype != null && Ntime != null)
@@ -55,7 +58,6 @@ namespace EmgDiscordPost
 
                     int type = (int)Ntype;
                     DateTime time = (DateTime)Ntime;
-
                     switch (type)
                     {
                         case 1:
@@ -79,6 +81,7 @@ namespace EmgDiscordPost
 
             }
 
+            //Console.WriteLine("getDB:Start{0},end:{1}",start.ToString("HH:mm:ss"),end.ToString("HH:mm:ss"));
             return outputData;
 
         }

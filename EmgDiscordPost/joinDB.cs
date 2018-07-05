@@ -102,7 +102,7 @@ namespace EmgDiscordPost
             }
 
             nextJoinDelete = new DateTime(now30.Year, now30.Month, now30.Day, now30.Hour, min, 0);
-
+            //Console.WriteLine(nextJoinDelete.ToString("HH:mm:ss"));
         }
 
         //参加者のテーブルを削除するイベントループ
@@ -112,8 +112,12 @@ namespace EmgDiscordPost
             {
                 if (DateTime.Now > nextJoinDelete)
                 {
-                    DateTime start = nextJoinDelete - new TimeSpan(1, 0, 0);
-                    DateTime end = nextJoinDelete - new TimeSpan(0, 30, 0);
+                    //Console.WriteLine("delete");
+                    DateTime temp = nextJoinDelete;
+                    setNextJoinDelTime();
+
+                    DateTime start = temp - new TimeSpan(1, 0, 0);
+                    DateTime end = temp - new TimeSpan(0, 30, 0);
                     bool isExist = isExistEmg(start, end);
 
                     if (isExist)
@@ -121,7 +125,7 @@ namespace EmgDiscordPost
                         joindatabase.cleartable();  //参加者クリア
                     }
 
-                    setNextJoinDelTime();
+                    //setNextJoinDelTime();
                 }
 
                 System.Threading.Thread.Sleep(1000);
