@@ -157,7 +157,7 @@ namespace EmgDiscordPost
         {
             var chn = client.GetChannel(channelID) as SocketTextChannel;
             channelID = chn.Id;
-            Console.WriteLine("Latency");
+            //Console.WriteLine("Latency");
         }
     }
 

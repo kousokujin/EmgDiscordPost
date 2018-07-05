@@ -49,6 +49,7 @@ namespace EmgDiscordPost
                 if((d - DateTime.Now) < ts)
                 {
                     notify = d;
+                    ts = (d - DateTime.Now);
                 }
             }
 
