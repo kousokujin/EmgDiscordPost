@@ -20,7 +20,7 @@ namespace EmgDiscordPost
 
         //ファイル名
         string filename;
-
+        string defaultXMLfile = "config/config.xml";
         //マイグレーション
         public bool isMigration = false;
 
@@ -29,48 +29,60 @@ namespace EmgDiscordPost
             this.filename = filename;
             var cof = new configClass();
             object cofObj;
+            string nowFiletype = filetype;
+            //bool isfileEnbale = false;
 
             if (XmlFileIO.isExist(filename) == false)
             {
-                logOutput.writeLog("設定ファイルが見つかりません。");
-                init();
-                return;
-            }
-
-            if (filetype == "XML")
-            {
-                bool loaded = XmlFileIO.xmlLoad(cof.GetType(), this.filename, out cofObj);
-                if (loaded == false && cofObj is configClass)
+                if (XmlFileIO.isExist(defaultXMLfile) == true)
                 {
-                    logOutput.writeLog("設定ファイルの読み込みに失敗しました。");
+                    nowFiletype = "XML";
+                }
+                else
+                {
+                    logOutput.writeLog("設定ファイルが見つかりません。");
                     init();
                     return;
                 }
+            }
+
+            if(nowFiletype == "TEXT")
+            {
+                configClass cofTmp;
+                (cofTmp,this.isMigration) = setConfig(this.filename);
+
+                if (cofTmp == null)  //読み込み失敗
+                {
+                    logOutput.writeLog("テキストの設定ファイルの読み込みに失敗しました。");
+                    //init();
+                }
+                else
+                {
+                    //isfileEnbale = true;
+                    setData(cofTmp);
+                    savefile();
+                    return;
+                }
+            }
+
+            bool loaded = XmlFileIO.xmlLoad(cof.GetType(), defaultXMLfile, out cofObj);
+            if (loaded == false || !(cofObj is configClass))
+            {
+                logOutput.writeLog("XML設定ファイルの読み込みに失敗しました。");
+                init();
+                return;
+            }
+            else
+            {
 
                 cof = cofObj as configClass;
                 setData(cof);
                 return;
             }
 
-            if(filetype == "FILE")
-            {
-                configClass cofTmp;
-                (cofTmp,this.isMigration) = setConfig(this.filename);
-
-                if(cofTmp == null)  //読み込み失敗
-                {
-                    logOutput.writeLog("設定ファイルの読み込みに失敗しました。");
-                    init();
-                    return;
-                }
-
-                setData(cofTmp);
-                savefile();
-            }
-
             //default
-            logOutput.writeLog("設定ファイルが見つかりません。");
-            init();
+            //logOutput.writeLog("設定ファイルが見つかりません。");
+            //init();
 
         }
 
@@ -88,7 +100,7 @@ namespace EmgDiscordPost
             bool enable = ulong.TryParse(cof.channelID, out this.channelID);
             while (!enable)
             {
-                Console.Write("ChannelID:");
+                logOutput.Console("ChannelID:");
                 string chStr = Console.ReadLine();
                 enable = ulong.TryParse(chStr, out this.channelID);
             }
@@ -96,27 +108,27 @@ namespace EmgDiscordPost
 
         private void generateSetting()
         {
-            System.Threading.Thread.Sleep(1000);
-            Console.WriteLine("Database Setting");
-            Console.Write("Database Address:");
+            //System.Threading.Thread.Sleep(1000);
+            logOutput.ConsoleLine("Database Setting");
+            logOutput.Console("Database Address:");
             DBaddress = Console.ReadLine();
-            Console.Write("Database Name:");
+            logOutput.Console("Database Name:");
             database = Console.ReadLine();
-            Console.Write("UserName:");
+            logOutput.Console("UserName:");
             user = Console.ReadLine();
-            Console.Write("Password:");
+            logOutput.Console("Password:");
             password = Console.ReadLine();
 
-            Console.Write("Discord Setting");
-            Console.Write("Bot Name:");
+            logOutput.ConsoleLine("Discord Setting");
+            logOutput.Console("Bot Name:");
             botname = Console.ReadLine();
-            Console.Write("Bot Token:");
+            logOutput.Console("Bot Token:");
             token = Console.ReadLine();
 
             var isConvert = false;
             do
             {
-                Console.Write("ChannelID:");
+                logOutput.Console("ChannelID:");
                 string tmpID = Console.ReadLine();
 
                 isConvert = ulong.TryParse(tmpID, out channelID);
@@ -147,7 +159,7 @@ namespace EmgDiscordPost
             cof.channelID = this.channelID.ToString();
             cof.token = this.token;
 
-            bool res = XmlFileIO.xmlSave(cof.GetType(), this.filename, cof);
+            bool res = XmlFileIO.xmlSave(cof.GetType(), defaultXMLfile, cof);
 
             return res;
         }
@@ -196,7 +208,7 @@ namespace EmgDiscordPost
                     case "token":
                         token = sepalate[1];
                         break;
-                    case "chanel":
+                    case "channel":
                         channelIDStr = sepalate[1];
                         break;
                     case "botname":
@@ -207,7 +219,7 @@ namespace EmgDiscordPost
 
             if(channelIDStr == "" && ulong.TryParse(channelIDStr,out chID) == false)
             {
-                chID = ulong.Parse(channelIDStr);
+                //chID = ulong.Parse(channelIDStr);
                 return (null, false);
             }
 
@@ -221,7 +233,7 @@ namespace EmgDiscordPost
 
                 output.token = token;
                 output.botname = botname;
-                output.channelID = chID.ToString();
+                output.channelID = channelIDStr;
 
                 return (output, mig);
             }

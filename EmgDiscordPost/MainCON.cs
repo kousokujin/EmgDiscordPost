@@ -56,12 +56,20 @@ namespace EmgDiscordPost
         public MainCON(Configration cof)
         {
             init(cof.DBaddress, cof.database, cof.user, cof.password, cof.botname, cof.channelID, cof.token);
+            if(cof.isMigration == true)
+            {
+                FirstMigration();
+            }
         }
 
-        public MainCON(string filename = "config/config.xml",string filetype = "XML")
+        public MainCON(string filename = "config/config.xml", string filetype = "XML")
         {
             Configration cof = new Configration(filename, filetype);
             init(cof.DBaddress, cof.database, cof.user, cof.password, cof.botname, cof.channelID, cof.token);
+            if (cof.isMigration == true)
+            {
+                FirstMigration();
+            }
         }
 
         public void init(string DBaddress, string database, string user, string password, string botname, ulong channelID, string token)
@@ -121,6 +129,39 @@ namespace EmgDiscordPost
             //参加メンバーテーブル
             joinMemDB.droptable();
             joinMemDB.createtable();
+        }
+
+        //テーブル初期化
+        public void cleartables(string table = "")
+        {
+            switch (table) {
+                case "":
+                    configDB.cleartable();
+                    chpTimeDB.cleartable();
+                    joinMemDB.createtable();
+                    break;
+                case "CHP":
+                    chpTimeDB.cleartable();
+                    break;
+                case "JOIN":
+                    joinMemDB.cleartable();
+                    break;
+                case "CONFIG":
+                    configDB.cleartable();
+                    break;
+            }
+        }
+
+        //バル・ロドス通知
+        public void setLodos(bool value)
+        {
+            EmgCon.setLodos(value);
+        }
+
+        //任意の文字をPOST
+        public void sendPost(string postword)
+        {
+            discord.postStr(postword);
         }
     }
 }
