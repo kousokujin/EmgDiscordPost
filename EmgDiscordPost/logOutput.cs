@@ -121,5 +121,39 @@ namespace EmgDiscordPost
 
             System.Console.WriteLine(text);
         }
+
+        public static void Console(string str, params string[] par)
+        {
+            while (logQue.Count != 0)
+            {
+
+            }
+
+            System.Console.Write(str, par);
+        }
+
+        public static void Console(string str)
+        {
+            string[] par = new string[0];
+            Console(str,par);
+        }
+
+        public static void ConsoleLine(string str,params string[] par)
+        {
+            while (logQue.Count != 0)
+            {
+
+            }
+
+            System.Console.WriteLine(str, par);
+        }
+
+        public static void ConsoleLine(string str)
+        {
+            string[] par = new string[0];
+            ConsoleLine(str, par);
+        }
     }
+
+   
 }

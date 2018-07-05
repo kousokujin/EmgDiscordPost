@@ -20,7 +20,7 @@ namespace EmgDiscordPost
             //イベントの登録
             post.notificationTime += EmgEventNotify;
             post.todayEmgOrder += TodayEmgOrder;    //内容がすべて同じなので同じイベントで
-            post.changeDay += TodayEmgOrder;
+            post.changeDay += NextDayEvent;
             post.MaintainTime += TodayEmgOrder;
             post.tomorrowEmgOrder += TomorrowEmgOrder;
             post.LodosNotify += endLodos;
@@ -74,7 +74,28 @@ namespace EmgDiscordPost
             bool Lodos = (isExist && value == "true");
             List<EventData> lst = DBget.getListEvent(DateTime.Now);
 
-            await post.postListEmg(lst, DateTime.Now, Lodos);
+            if (lst.Count > 0)
+            {
+                await post.postListEmg(lst, DateTime.Now, Lodos);
+            }
+            else
+            {
+                await post.AsyncPostService("今日の緊急クエストはありません。");
+            }
+        }
+
+        //日付が変わった時
+        private async void NextDayEvent(object sender,EventArgs e)
+        {
+            (string value, bool isExist) = DBconfig.getValue("Lodos");
+
+            bool Lodos = (isExist && value == "true");
+            List<EventData> lst = DBget.getListEvent(DateTime.Now);
+
+            if (lst.Count > 0)  //緊急クエストが1つ以上ある場合だけ投稿
+            {
+                await post.postListEmg(lst, DateTime.Now, Lodos);
+            }
         }
 
         //明日の緊急クエスト
@@ -83,9 +104,16 @@ namespace EmgDiscordPost
             (string value, bool isExist) = DBconfig.getValue("Lodos");
             List<EventData> lst = DBget.getListEvent(DateTime.Now + new TimeSpan(1,0,0,0));
 
-            await post.postListEmg(lst, DateTime.Now + new TimeSpan(1,0,0,0), false);
+            if (lst.Count > 0)
+            {
+                await post.postListEmg(lst, DateTime.Now + new TimeSpan(1, 0, 0, 0), false);
+            }
+            else
+            {
+                await post.AsyncPostService("明日の緊急クエストはありません。");
+            }
 
-            DBconfig.updateValue("Lodos", "true");
+            //DBconfig.updateValue("Lodos", "true");
         }
 
         //バル・ロドスの日がおわる30分前

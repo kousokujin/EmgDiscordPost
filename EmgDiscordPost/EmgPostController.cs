@@ -89,7 +89,7 @@ namespace EmgDiscordPost
                 }
                 count++;
 
-                if (count != data.Count)
+                if (count != data.Count && e is emgQuest)
                 {
                     postStr += '\n';
                 }

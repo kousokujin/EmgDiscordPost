@@ -32,7 +32,6 @@ namespace EmgDiscordPost
 
             client = new DiscordSocketClient();
             //chn = client.GetChannel(channelID) as SocketTextChannel;
-
             connect();
         }
 
@@ -66,7 +65,7 @@ namespace EmgDiscordPost
             await client.StartAsync();
 
             client.MessageReceived += this.MessageReceived;
-            //client.LatencyUpdated += LatencyEvent;
+            client.LatencyUpdated += LatencyUpdate;
         }
 
         private Task MessageReceived(SocketMessage arg)
@@ -99,10 +98,14 @@ namespace EmgDiscordPost
             {
                 return;
             }
+            var tmp = client.GetChannel(channelID);
             SocketTextChannel st = client.GetChannel(channelID) as SocketTextChannel;
-            Task t = st.SendMessageAsync(content);
-            logOutput.writeLog("Discordへ投稿「{0}」", content);
-            t.Wait();
+            if (st != null)
+            {
+                Task t = st.SendMessageAsync(content);
+                logOutput.writeLog("Discordへ投稿「{0}」", content);
+                t.Wait();
+            }
         }
 
         //なんかうまくいかないので使用禁止（postStr(string)を使う）
@@ -148,6 +151,13 @@ namespace EmgDiscordPost
             string replace = mes.Replace(myIDstr, "");
 
             return (isRep, replace);
+        }
+
+        private async Task LatencyUpdate(int a, int b)
+        {
+            var chn = client.GetChannel(channelID) as SocketTextChannel;
+            channelID = chn.Id;
+            Console.WriteLine("Latency");
         }
     }
 

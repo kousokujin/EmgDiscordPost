@@ -33,6 +33,11 @@ namespace EmgDiscordPost
                 logOutput.writeLog("タイムアウトしました。");
                 return 1;
             }
+            catch (Npgsql.PostgresException)
+            {
+                logOutput.writeLog("ユーザー名・パスワードが正しくありません。");
+                return 1;
+            }
 
             //logOutput.writeLog("データベースに接続しました。");
             return connection;
