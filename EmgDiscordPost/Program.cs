@@ -17,7 +17,7 @@ namespace EmgDiscordPost
 
             Console.Write("Token:");
             string token = Console.ReadLine();
-            ulong id = 0;
+            ulong id = 459476216177754113;
 
             //覇者の紋章
             IChpDataRead chpData = new PostgreSQL_ChpRead(address, database, user, pass);
