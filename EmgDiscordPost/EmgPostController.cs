@@ -95,7 +95,7 @@ namespace EmgDiscordPost
                 }
             }
 
-            if (Lodos && LodosCalculator.calcRodosDay(time))
+            if (Lodos)
             {
                 postStr += '\n';
                 postStr += "本日はデイリーオーダー「バル・ロドス討伐(VH)」の日です。";
@@ -107,7 +107,7 @@ namespace EmgDiscordPost
         public async Task LodosPost()
         {
             string postStr = string.Format("デイリーオーダー「バル・ロドス討伐(VH)」の日があと30分で終わります。\n オーダーは受注しましたか？次回のバル・ロドス討伐(VH)の日は{0}です。",
-                LodosCalculator.nextRodosDay(DateTime.Now + new TimeSpan(1, 0, 0, 0)));
+                (LodosCalculator.nextRodosDay(DateTime.Now + new TimeSpan(1, 0, 0, 0))).ToString("MM月dd日"));
             await emgService.PostAsync(postStr);
         }
 

@@ -71,7 +71,7 @@ namespace EmgDiscordPost
         {
             (string value,bool isExist) = DBconfig.getValue("Lodos");
 
-            bool Lodos = (isExist && value == "true");
+            bool Lodos = (isExist && value == "true" && LodosCalculator.calcRodosDay(DateTime.Now));
             List<EventData> lst = DBget.getListEvent(DateTime.Now);
 
             if (lst.Count > 0)
@@ -89,12 +89,19 @@ namespace EmgDiscordPost
         {
             (string value, bool isExist) = DBconfig.getValue("Lodos");
 
-            bool Lodos = (isExist && value == "true");
+            bool Lodos = (isExist && value == "true"　&& LodosCalculator.calcRodosDay(DateTime.Now));
             List<EventData> lst = DBget.getListEvent(DateTime.Now);
 
             if (lst.Count > 0)  //緊急クエストが1つ以上ある場合だけ投稿
             {
                 await post.postListEmg(lst, DateTime.Now, Lodos);
+            }
+            else
+            {
+                if (Lodos)
+                {
+                    await post.AsyncPostService("本日はデイリーオーダー「バル・ロドス討伐(VH)」の日です。");
+                }
             }
         }
 
