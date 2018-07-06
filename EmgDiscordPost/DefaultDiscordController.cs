@@ -8,11 +8,14 @@ namespace EmgDiscordPost
     class DefaultDiscordController  :   AbstractServiceController
     {
         List<AbstractServiceController> other;
+        Random rnd;
 
         public DefaultDiscordController(IPostService service,List<AbstractServiceController> otherservice) : base(service)
         {
             this.other = otherservice;
             service.ReceiveReplay += replayEvent;
+            //シード値は適当
+            rnd = new Random(DateTime.Now.Day * DateTime.Now.Second);
         }
 
         public override bool isWord(string word)
@@ -77,10 +80,35 @@ namespace EmgDiscordPost
                         service.PostAsync("Hey Siri");
                         return;
                     default:
-                        service.PostAsync("何いってんだこいつ");
+                        service.PostAsync(randomWord());
                         return;
                         
                 }
+            }
+        }
+
+        private string randomWord()
+        {
+            int random = rnd.Next() % 7;
+
+            switch (random)
+            {
+                case 0:
+                    return "何言ってんだこいつ";
+                case 1:
+                    return ":sunglasses:";
+                case 2:
+                    return "酒井様かっこいい！！";
+                case 3:
+                    return "おっぱい";
+                case 4:
+                    return "https://www.google.com/search?q=%E7%84%BC%E8%82%89&client=firefox-b&source=lnms&tbm=isch&sa=X&ved=0ahUKEwjZ5oKP54ncAhXWzmEKHVrJAZoQ_AUICygC&biw=1447&bih=917";
+                case 5:
+                    return "苦情は@Arisan_04までおねがいします。";
+                case 6:
+                    return ":x:";
+                default:
+                    return "http://pso2.jp/";
             }
         }
     }

@@ -1,0 +1,11 @@
+{
+  "profiles": {
+    "EmgDiscordPost": {
+      "commandName": "Project"
+    },
+    "EmgDiscordPostFile": {
+      "commandName": "Project",
+      "commandLineArgs": "config/conf.txt"
+    }
+  }
+}

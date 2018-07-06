@@ -56,7 +56,7 @@ namespace EmgDiscordPost
         public MainCON(Configration cof)
         {
             init(cof.DBaddress, cof.database, cof.user, cof.password, cof.botname, cof.channelID, cof.token);
-            if(cof.isMigration == true)
+            if (cof.isMigration == true)
             {
                 FirstMigration();
             }
@@ -150,6 +150,14 @@ namespace EmgDiscordPost
                     configDB.cleartable();
                     break;
             }
+        }
+
+        //データベースを手動で更新した時に実行する
+        public void reloadDatabase()
+        {
+            //覇者の紋章の通知時間の再読み込み
+            chpCon.reloadNotifyTime();
+            
         }
 
         //バル・ロドス通知

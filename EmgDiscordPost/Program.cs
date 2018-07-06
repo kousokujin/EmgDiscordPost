@@ -7,8 +7,14 @@ namespace EmgDiscordPost
     {
         static void Main(string[] args)
         {
-            //テストコード
-            ConsoleMain con = new ConsoleMain();
+            if (args.Length > 0)
+            {
+                ConsoleMain con = new ConsoleMain(args[0]);
+            }
+            else
+            {
+                ConsoleMain con = new ConsoleMain();
+            }
         }
     }
 }

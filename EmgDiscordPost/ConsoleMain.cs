@@ -100,6 +100,9 @@ namespace EmgDiscordPost
                     }
                     break;
 
+                case "reload":
+                    con.reloadDatabase();
+                    break;
                 case "version":
                     outputVersion();
                     break;
@@ -124,7 +127,8 @@ namespace EmgDiscordPost
             output += "lodos [true|false]:バル・ロドス通知の設定\n";
             output += "init:データベースのマイグレーション\n";
             output += "clear:データベースのクリア\n";
-            output += "post [word]:Dicordに投稿";
+            output += "post [word]:Dicordに投稿\n";
+            output += "reload : 覇者の紋章の通知時間の再読込み";
 
             logOutput.ConsoleLine(output);
         }
