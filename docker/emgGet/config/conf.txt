@@ -1,0 +1,5 @@
+server = database
+database = docker
+user = docker
+password = docker
+init = true

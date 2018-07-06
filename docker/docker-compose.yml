@@ -1,0 +1,21 @@
+version: '2'
+services:
+   database:
+      build: postgre/.
+      image: pso2databaseimg
+      container_name: pso2db
+      ports:
+         - "5432:5432"
+   getapp:
+      build: emgGet/.
+      image: getappimg
+      container_name: pso2getapp
+      links:
+         - "database"
+   discordbot:
+      build: discordbot/.
+      image: botimage
+      container_name: pso2bot
+      links:
+         - "database"
+         - "getapp"

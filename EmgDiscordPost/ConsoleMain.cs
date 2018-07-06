@@ -41,11 +41,19 @@ namespace EmgDiscordPost
 
         private string[] sepalate (string command)
         {
-            string reCommand = command.Replace("　", " ");
-            reCommand = reCommand.Replace("\t", "");
+            try
+            {
+                string reCommand = command.Replace("　", " ");
+                reCommand = reCommand.Replace("\t", "");
 
-            string[] output = reCommand.Split(' ');
-            return output;
+                string[] output = reCommand.Split(' ');
+                return output;
+            }
+            catch
+            {
+                string[] str = new string[] { "" };
+                return str;
+            }
         }
 
         private void CommandProcess(string command)

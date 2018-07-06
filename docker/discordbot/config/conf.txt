@@ -1,0 +1,8 @@
+server = database
+database = docker
+user = docker
+password = docker
+botname = ExsampleApp
+channel = 00000000
+token = TokenStrings
+init = true
