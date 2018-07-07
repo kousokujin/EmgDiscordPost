@@ -217,6 +217,20 @@ namespace EmgDiscordPost
 
             foreach (List<object> o in table)
             {
+                int tmpID = 0;
+                if (o[0] is int) {
+                    tmpID = (int)o[0];
+                }
+
+                string name = o[1] as string;
+
+                if(name == member.getName())
+                {
+                    id = tmpID;
+                    isMember = true;
+                }
+
+                /*
                 foreach(object obj in o)
                 {
                     int tempID = 0;
@@ -229,7 +243,7 @@ namespace EmgDiscordPost
 
                     if(obj is int)
                     {
-                        int NulltempID = (int)obj;
+                        tempID = (int)obj;
                     }
 
                     if(tempMember == member.getName())
@@ -238,6 +252,7 @@ namespace EmgDiscordPost
                         isMember = true;
                     }
                 }
+                */
             }
 
             return (id, isMember);

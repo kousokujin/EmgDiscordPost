@@ -78,6 +78,11 @@ namespace EmgDiscordPost
                         return (JobClass.None, JobClass.None);
                     }
 
+                    if(mainclass == subclass)   //メインクラスとサブクラスが同じ
+                    {
+                        return (JobClass.None, JobClass.None);
+                    }
+
                     return (mainclass,subclass);
                 }
 
